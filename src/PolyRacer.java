@@ -81,8 +81,8 @@ ArrayList<Point> path = new ArrayList<Point>();
       font = new Font ("Impact", Font.PLAIN, 20);
 
        startButton = new Rectangle(pWidth - 101, pHeight - 51, 100, 50);
-       dataMax = 50 + 70 + 200;
-       dataMin = 0 - 70 + 200;
+      dataMax = 50 + 70 + 200;
+      dataMin = 130;
       for(int i = 0, j = 0; i < 10000; i++)
       {
          int switchVar = random.nextInt(25)+1;
@@ -102,13 +102,14 @@ ArrayList<Point> path = new ArrayList<Point>();
             int randomValue = random.nextInt(50);
             int randomOffset = random.nextInt(70);
 
+
             //Main dipped dots
             data[i] = new Point((int)(600.0/10000*i), randomValue + 200);
 
             if(i < 99999)
             {
                //Random Extra dots
-               data[++i] = new Point((int)(600.0/10000*i), dataMax);
+               data[++i] = new Point((int)(600.0/10000*i), randomValue + randomOffset + 200);
             }
 
          }
@@ -116,13 +117,13 @@ ArrayList<Point> path = new ArrayList<Point>();
          {
             int randomValue = random.nextInt(50);
             int randomOffset = random.nextInt(70);
-            
+
             data[i] = new Point((int)(600.0/10000*i), randomValue + 150);
 
             if(i < 99999)
             {
                //Random Extra dots
-               data[++i] = new Point((int)(600.0/10000*i), dataMin);
+               data[++i] = new Point((int)(600.0/10000*i), randomValue - randomOffset + 200);
             }
 
          }
