@@ -26,7 +26,7 @@ public class PolyRacer extends Applet
    Dimension dim;
    private static final int NO_DELAYS_PER_YIELD = 16;
    private static int MAX_FRAME_SKIPS = 5;
-   static int pWidth = 1200, pHeight = 800, dataMax = 0, dataMin = 0;
+   static int pWidth = 1200, pHeight = 700, dataMax = 0, dataMin = 0;
    Graphics bufferGraphics; 
    BufferedImage bf = new BufferedImage (pWidth, pHeight,BufferedImage.TYPE_INT_RGB);
    Point mouse = new Point(0, 0), thing = new Point(50, 50);
@@ -166,25 +166,27 @@ ArrayList<Point> path = new ArrayList<Point>();
 
       g2.setColor(Color.black);
       g2.fillRect(0, 0, pWidth, pHeight);
+       double yy = (((double)dataMin)/((double)pHeight/((double)dataMax-(double)dataMin)))*scaleAnimation;
        if(view == 0) {
            g2.setColor(Color.white);
            for (int i = 0; i < 10000; i++)
                g2.drawRect((int) data[i].getX(), (int) data[i].getY(), 1, 1);
-           drawButton(g2);
+           g2.setColor(Color.green);
            Point previous = null, next = null;
            Iterator<Point> it = path.iterator();
            while(it.hasNext())
            {
                if(previous == null)
-               previous = it.next();
+                   previous = it.next();
                else
                {
                    next = it.next();
                    g2.draw(new Line2D.Double(previous.getX(), previous.getY(), next.getX(), next.getY()));
                    previous = next;
                }
-               g2.fillOval((int) previous.getX()-5, (int)previous.getY()-5, 10, 10);
+               g2.fillOval((int) (previous.getX()-5), (int)(previous.getY()-5), 10, 10);
            }
+           drawButton(g2);
        }
        else if(view == 1)
        {
@@ -193,14 +195,30 @@ ArrayList<Point> path = new ArrayList<Point>();
            else if(scaleAnimation>(double)pHeight/(double)(dataMax-dataMin))
                scaleAnimation = (double)pHeight/(double)(dataMax-dataMin);
            g2.setColor(Color.white);
+
            for (int i = 0; i < 10000; i++)
-               //g2.drawRect((int) (data[i].getX()*scaleAnimation), (int) ((data[i].getY() - dataMin)*scaleAnimation), 1, 1);
-               g2.drawRect((int) (data[i].getX()*scaleAnimation), (int) ((data[i].getY() - (((double)dataMin)/((double)pHeight/((double)dataMax-(double)dataMin)))*scaleAnimation    )*scaleAnimation), 1, 1);
+               g2.drawRect((int) (data[i].getX()*scaleAnimation), (int) ((data[i].getY() - yy    )*scaleAnimation), 1, 1);
+           g2.setColor(Color.green);
+           Point previous = null, next = null;
+           Iterator<Point> it = path.iterator();
+           while(it.hasNext())
+           {
+               if(previous == null)
+                   previous = it.next();
+               else
+               {
+                   next = it.next();
+                   g2.draw(new Line2D.Double(previous.getX()*scaleAnimation, (previous.getY()- yy)*scaleAnimation, next.getX()*scaleAnimation, (next.getY()- yy)*scaleAnimation));
+                   previous = next;
+               }
+               g2.fillOval((int) (previous.getX()*scaleAnimation)-5, (int)((previous.getY()- yy) *scaleAnimation)-5, 10, 10);
+           }
        }
-      g2.draw(new Line2D.Double(0, dataMax, pWidth, dataMax));
-      g2.draw(new Line2D.Double(0, dataMin, pWidth, dataMin));
-      g2.fillRect((int)mouse.getX(), (int)mouse.getY(), 10, 10);
-      g2.fillRect((int)thing.getX(), (int)thing.getY(), 10, 10);
+
+      //g2.draw(new Line2D.Double(0, dataMax, pWidth, dataMax));
+      //g2.draw(new Line2D.Double(0, dataMin, pWidth, dataMin));
+      //g2.fillRect((int)mouse.getX(), (int)mouse.getY(), 10, 10);
+      //g2.fillRect((int)thing.getX(), (int)thing.getY(), 10, 10);
       //for double buffer, when it is done printing everything
       //bufferGraphics.drawString (powerups.size() + "", 100, 100);
       g.drawImage(bf,0,0,this);
