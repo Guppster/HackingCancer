@@ -29,12 +29,11 @@ public class PolyRacer extends Applet
    static int pWidth = 1200, pHeight = 700, dataMax = 0, dataMin = 0;
    Graphics bufferGraphics; 
    BufferedImage bf = new BufferedImage (pWidth, pHeight,BufferedImage.TYPE_INT_RGB);
-   Point mouse = new Point(0, 0), thing = new Point(50, 50);
-ArrayList<Point> path = new ArrayList<Point>();
+   Point mouse = new Point(0, 0);
+   ArrayList<Point> path = new ArrayList<Point>(), data = new ArrayList<Point>();
+    Sprite player = null;
    boolean right = false, left = false, up = false, down = false;
-   int framesPerSecond = 60, view = 0;
-          double scaleAnimation = 1;
-   Point[] data = new Point[10000];
+   int framesPerSecond = 60, view = 0; double scaleAnimation = 1, score = 0;
 
    long period = ((long)(1000/framesPerSecond))*1000000L;
    Rectangle startButton;
@@ -104,12 +103,12 @@ ArrayList<Point> path = new ArrayList<Point>();
 
 
             //Main dipped dots
-            data[i] = new Point((int)((double)(pWidth)/10000*i), randomValue + pHeight/2+25);
+            data.add(new Point((int) ((double) (pWidth) / 10000 * i), randomValue + pHeight / 2 + 25));
 
             if(i < 99999)
             {
                //Random Extra dots
-               data[++i] = new Point((int)((double)(pWidth)/10000*i), randomValue + randomOffset + pHeight/2+25);
+               data.add(++i, new Point((int) ((double) (pWidth) / 10000 * i), randomValue + randomOffset + pHeight / 2 + 25));
             }
 
          }
@@ -118,12 +117,12 @@ ArrayList<Point> path = new ArrayList<Point>();
             int randomValue = random.nextInt(50);
             int randomOffset = random.nextInt(70);
 
-            data[i] = new Point((int)((double)(pWidth)/10000*i), randomValue + pHeight/2 -25);
+            data.add(new Point((int) ((double) (pWidth) / 10000 * i), randomValue + pHeight / 2 - 25));
 
             if(i < 99999)
             {
                //Random Extra dots
-               data[++i] = new Point((int)((double)(pWidth)/10000*i), randomValue - randomOffset + pHeight/2-25);
+               data.add(++i, new Point((int) ((double) (pWidth) / 10000 * i), randomValue - randomOffset + pHeight / 2-25));
             }
 
          }
@@ -170,7 +169,7 @@ ArrayList<Point> path = new ArrayList<Point>();
        if(view == 0) {
            g2.setColor(Color.white);
            for (int i = 0; i < 10000; i++)
-               g2.drawRect((int) data[i].getX(), (int) data[i].getY(), 1, 1);
+                g2.drawRect((int) data.get(i).getX(), (int) data.get(i).getY(), 1, 1);
            g2.setColor(Color.green);
            Point previous = null, next = null;
            Iterator<Point> it = path.iterator();
@@ -188,33 +187,75 @@ ArrayList<Point> path = new ArrayList<Point>();
            }
            drawButton(g2);
        }
-       else if(view == 1)
-       {
-           if(scaleAnimation<(double)pHeight/(double)(dataMax-dataMin))
-           scaleAnimation+=0.01;
-           else if(scaleAnimation>(double)pHeight/(double)(dataMax-dataMin))
-               scaleAnimation = (double)pHeight/(double)(dataMax-dataMin);
+       else if(view == 1) {
+           if (scaleAnimation < (double) pHeight / (double) (dataMax - dataMin))
+               scaleAnimation += 0.01;
+           else if (scaleAnimation > (double) pHeight / (double) (dataMax - dataMin)) {
+               scaleAnimation = (double) pHeight / (double) (dataMax - dataMin);
+               view = 2;
+           }
            g2.setColor(Color.white);
 
            for (int i = 0; i < 10000; i++)
-               g2.drawRect((int) (data[i].getX()*scaleAnimation), (int) ((data[i].getY() - yy    )*scaleAnimation), 1, 1);
+               g2.drawRect((int) (data.get(i).getX() * scaleAnimation), (int) ((data.get(i).getY() - (((double) dataMin) / ((double) pHeight / ((double) dataMax - (double) dataMin))) * scaleAnimation) * scaleAnimation), 1, 1);
            g2.setColor(Color.green);
            Point previous = null, next = null;
            Iterator<Point> it = path.iterator();
-           while(it.hasNext())
-           {
-               if(previous == null)
+           while (it.hasNext()) {
+               if (previous == null)
                    previous = it.next();
-               else
-               {
+               else {
                    next = it.next();
-                   g2.draw(new Line2D.Double(previous.getX()*scaleAnimation, (previous.getY()- yy)*scaleAnimation, next.getX()*scaleAnimation, (next.getY()- yy)*scaleAnimation));
+                   g2.draw(new Line2D.Double(previous.getX() * scaleAnimation, (previous.getY() - yy) * scaleAnimation, next.getX() * scaleAnimation, (next.getY() - yy) * scaleAnimation));
                    previous = next;
                }
-               g2.fillOval((int) (previous.getX()*scaleAnimation)-5, (int)((previous.getY()- yy) *scaleAnimation)-5, 10, 10);
+               g2.fillOval((int) (previous.getX() * scaleAnimation) - 5, (int) ((previous.getY() - yy) * scaleAnimation) - 5, 10, 10);
            }
        }
+           else if(view == 2) {
+           g2.setColor(Color.cyan);
+           g2.drawString("Score: " + score, 10, 10);
+           g2.setColor(Color.white);
+           Iterator<Point> dots = data.iterator();
+           Point dot;
+           while (dots.hasNext()) {
+               dot = dots.next();
+               Point d = new Point((int) (dot.getX() * scaleAnimation), (int) ((dot.getY() - (((double) dataMin) / ((double) pHeight / ((double) dataMax - (double) dataMin))) * scaleAnimation) * scaleAnimation));
+               g2.fillRect((int)d.getX(), (int)d.getY(), 1, 1);
+               if(player.getRectangle().contains(d))
+               {
+                   dots.remove();
+                   score++;
+               }
 
+           }
+           g2.setColor(Color.green);
+           Point previous = null, next = null;
+           Iterator<Point> it = path.iterator();
+           while (it.hasNext()) {
+               if (previous == null)
+                   previous = it.next();
+               else {
+                   next = it.next();
+                   Shape current = new Line2D.Double(previous.getX() * scaleAnimation, (previous.getY() - yy) * scaleAnimation, next.getX() * scaleAnimation, (next.getY() - yy) * scaleAnimation);
+                   g2.draw(current);
+                   previous = next;
+                   if(player != null)
+                        physics(current);
+
+
+
+
+
+
+
+
+
+               }
+               g2.fillOval((int) (previous.getX() * scaleAnimation) - 5, (int) ((previous.getY() - yy) * scaleAnimation) - 5, 10, 10);
+               player.print(g2);
+           }
+       }
       //g2.draw(new Line2D.Double(0, dataMax, pWidth, dataMax));
       //g2.draw(new Line2D.Double(0, dataMin, pWidth, dataMin));
       //g2.fillRect((int)mouse.getX(), (int)mouse.getY(), 10, 10);
@@ -223,17 +264,26 @@ ArrayList<Point> path = new ArrayList<Point>();
       //bufferGraphics.drawString (powerups.size() + "", 100, 100);
       g.drawImage(bf,0,0,this);
    }
-      
+
+    public void physics(Shape current)
+    {
+        if(player.getRect().intersectsLine((Line2D) current))
+            player.setYVelocity(1);
+        else
+            player.setYVelocity(-3);
+    }
+
    public void gameUpdate()
    {
       if(left)
-         thing.translate(-1, 0);
+         player.setXVelocity(-1);
       if(right)
-         thing.translate(1, 0);
+          player.setXVelocity(1);
       if(up)
-         thing.translate(0, -1);
+          player.setYVelocity(1);
       if(down)
-         thing.translate(0, 1);
+          player.setYVelocity(-1);
+    player.update();
    }
    
    /**Main thread that is started at the start of the program and calls everything to make the game smooth
@@ -294,6 +344,8 @@ ArrayList<Point> path = new ArrayList<Point>();
        if(view == 0)
        {
            path.add(m);
+           if(player == null)
+                player = new Sprite((int)m.getX(), (int)m.getY()-20, 10, 20);
        }
    }
    public void mouseDragged (MouseEvent e)
