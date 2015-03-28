@@ -5,10 +5,18 @@
 /**
 *@author Konrad Pfundner
 	*/
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import javafx.scene.shape.Circle;
+import jdk.nashorn.internal.parser.JSONParser;
 
+import javax.swing.text.Document;
 import java.applet.*;
 import java.awt.*;
+import java.io.IOException;
+import java.net.URL;
 import java.util.*;
 import java.awt.geom.Line2D;
 import java.awt.event.*;
@@ -60,6 +68,50 @@ public class PolyRacer extends Applet
    
       return img;
    }
+
+   public boolean saveScore(int score)
+   {
+       try {
+           HttpResponse<JsonNode> response = Unirest.post("https://tphummel-lru-cache.p.mashape.com/api/cache")
+                   .header("X-Mashape-Key", "OpLVYdsmHgmshpfFS0t3pLcAcM0dp1lquf1jsnN0CCFde9HqSx")
+                   .header("Content-Type", "application/json")
+                   .header("Accept", "application/json")
+                   .body("{'Score':" + score + "}")
+                   .asJson();
+           return true;
+       } catch (UnirestException e) {
+           e.printStackTrace();
+           return false;
+       }
+   }
+
+    public int loadScore()
+    {
+        String data;
+        //Check health of data
+        try {
+            HttpResponse<JsonNode> response = Unirest.get("https://tphummel-lru-cache.p.mashape.com/api/health")
+                    .header("X-Mashape-Key", "OpLVYdsmHgmshpfFS0t3pLcAcM0dp1lquf1jsnN0CCFde9HqSx")
+                    .header("Accept", "application/json")
+                    .asJson();
+
+            data = response.getBody().toString().split(":")[1].replace(" ", "").replace("\"", "");
+
+            if(data.equals("OK"))
+            {
+                 response = Unirest.get("https://tphummel-lru-cache.p.mashape.com/api/cache/4551a08f-6506-48f4-afe9-e6add1b3bab3")
+                        .header("X-Mashape-Key", "OpLVYdsmHgmshpfFS0t3pLcAcM0dp1lquf1jsnN0CCFde9HqSx")
+                        .header("Accept", "application/json")
+                        .asJson();
+
+                return Integer.valueOf(response.getBody().toString().split(":")[1].replace("}", ""));
+            }
+
+        } catch (UnirestException e) {
+            e.printStackTrace();
+        }
+
+    }
    
    /**initializes applet
 	*/
