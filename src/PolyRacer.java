@@ -395,7 +395,7 @@ public void ai()
         //System.out.println("X: " + path.get(0).getX() + " Y: " + path.get(0).getY() + "  " + path.size());
         if(player != null)
             jump(player);
-        if(mobs.get(0) != null)
+        if(mobs.size()>0)
             for(int i = 0;i<mobs.size();i++)
                 jump(mobs.get(i));
         Point previous = null, next = null;
