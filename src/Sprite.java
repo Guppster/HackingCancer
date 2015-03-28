@@ -15,6 +15,7 @@ public class Sprite
     private double velocityX;                    //Positive velocity takes you to the right side, negative velocity takes you to the left side
     private double velocityY;                    //Positive velocity takes you UP, negative velocity takes you DOWN
     private double x, y;
+    private boolean grounded = false;
 
     public Sprite(Image image, Rectangle rectangle, String name, int jumptimer, int jumpPower)
     {
@@ -76,6 +77,14 @@ public class Sprite
         this.facingRight = facingRight;
     }
 
+
+    public boolean isGrounded() {
+        return grounded;
+    }
+
+    public void setGrounded(boolean g) {
+        this.grounded = g;
+    }
     public double getVelocityX() {
         return velocityX;
     }

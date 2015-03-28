@@ -25,14 +25,14 @@ public class PolyRacer extends Applet
     Dimension dim;
     private static final int NO_DELAYS_PER_YIELD = 16;
     private static int MAX_FRAME_SKIPS = 5;
-    static int pWidth = 1200, pHeight = 700, dataMax = 0, dataMin = 0;
+    static int pWidth = 1000, pHeight = 600, dataMax = 0, dataMin = 0;
     Graphics bufferGraphics;
     BufferedImage bf = new BufferedImage(pWidth, pHeight, BufferedImage.TYPE_INT_RGB);
     Point mouse = new Point(0, 0);
     ArrayList<Point> path = new ArrayList<Point>(), data = new ArrayList<Point>();
     ArrayList<Monster> mobs = new ArrayList<Monster>();
     Player player = null;
-    boolean right = false, left = false, up = false, down = false, scaled = false, grounded = false;
+    boolean right = false, left = false, up = false, down = false, scaled = false;
     int framesPerSecond = 60, view = 0;
     double scaleAnimation = 1, score = 0;
 
@@ -151,14 +151,17 @@ public class PolyRacer extends Applet
             {
                 j = 1;
             }
+
+            int randomMess = random.nextInt(150);
+            int randomValue = random.nextInt(50);
+            int randomOffset = random.nextInt(70);
             if(dipp)
             {
-                int randomValue = random.nextInt(50);
-                int randomOffset = random.nextInt(70);
-
 
                 //Main dipped dots
                 data.add(new Point((int) ((double) (pWidth) / 10000 * i), randomValue + pHeight / 2 + 25));
+                data.add(new Point((int) ((double) i), randomMess + pHeight / 3 + 20));
+                data.add(new Point((int) ((double) i), randomMess + pHeight / 2));
 
                 if(i < 99999)
                 {
@@ -169,10 +172,10 @@ public class PolyRacer extends Applet
             }
             else
             {
-                int randomValue = random.nextInt(50);
-                int randomOffset = random.nextInt(70);
 
                 data.add(new Point((int) ((double) (pWidth) / 10000 * i), randomValue + pHeight / 2 - 25));
+                data.add(new Point((int) ((double) i), randomMess + pHeight / 3 + 20 ));
+                data.add(new Point((int) ((double) i), randomMess + pHeight / 2));
 
                 if(i < 99999)
                 {
@@ -232,6 +235,7 @@ public class PolyRacer extends Applet
             g2.setColor(Color.white);
             for(int i = 0; i < 10000; i++)
                 g2.drawRect((int) data.get(i).getX(), (int) data.get(i).getY(), 1, 1);
+
             g2.setColor(Color.green);
             Point previous = null, next = null;
             Iterator<Point> it = path.iterator();
@@ -347,48 +351,68 @@ public class PolyRacer extends Applet
         g.drawImage(bf, 0, 0, this);
     }
 
-    public void physics(Line2D current)
+    public void physics(Sprite s, Line2D current)
     {
 
-        if(player.getRectangle().intersectsLine(current))//player.getRectangle().intersectsLine((Line2D) current))
+        if(s.getRectangle().intersectsLine(current))//player.getRectangle().intersectsLine((Line2D) current))
         {
-            grounded = true;
+            s.setGrounded(true);
             //player.setVelocityY(3);
-            while(player.getRectangle().intersectsLine(current))
-                player.setRectangle(new Rectangle((int) player.getX(), (int) (player.getY() - 1), 10, 20));
-            player.setRectangle(new Rectangle((int) player.getX(), (int) (player.getY() - 1), 10, 20));
+            while(s.getRectangle().intersectsLine(current))
+                s.setRectangle(new Rectangle((int) s.getX(), (int) (s.getY() - 1), 10, 20));
+            s.setRectangle(new Rectangle((int) s.getX(), (int) (s.getY() - 1), 10, 20));
         }
     }
+public void ai()
+{
+    Iterator<Monster> it = mobs.iterator();
+    while(it.hasNext())
+    {
+        Monster m = it.next();
 
+    }
+}
+    public void jump(Sprite s)
+    {
+        if(s != null)
+        {
+            if(s.getJumpTimer() > 0)
+            {
+                s.setJumpTimer(s.getJumpTimer() - 1);
+                s.setVelocityY(s.getJumpPower());
+            }
+            else if(s.getVelocityY() >= 0)
+                s.setVelocityY(s.getVelocityY() - 1);
+            if(s instanceof Player)
+            s.update();
+            else
+                ((Monster)s).nextMove(player);
+        }
+    }
     public void gameUpdate()
     {
         //System.out.println("X: " + player.getX() + " Y: " + player.getY());
         //System.out.println("X: " + path.get(0).getX() + " Y: " + path.get(0).getY() + "  " + path.size());
         if(player != null)
-        {
-            if(player.getJumpTimer() > 0)
-            {
-                player.setJumpTimer(player.getJumpTimer() - 1);
-                player.setVelocityY(player.getJumpPower());
-            }
-            else if(player.getVelocityY() >= 0)
-                player.setVelocityY(player.getVelocityY() - 1);
-            player.update();
-        }
+            jump(player);
+        if(mobs.get(0) != null)
+            for(int i = 0;i<mobs.size();i++)
+                jump(mobs.get(i));
         Point previous = null, next = null;
         Iterator<Point> it = path.iterator();
-        while(it.hasNext())
-        {//prints the line/land
-            if(previous == null)
+        while (it.hasNext()) {//prints the line/land
+            if (previous == null)
                 previous = it.next();
-            else
-            {
+            else {
                 next = it.next();
                 //Shape current = new Line2D.Double(previous.getX()- player.getX() + pWidth/2, previous.getY() - player.getY() + pHeight/2, next.getX() - player.getX() + pWidth/2, next.getY() - player.getY() + pHeight/2);
                 //g2.draw(current);
                 //Shape current = new Line2D.Double(previous.getX()- player.getX() + pWidth/2, previous.getY() - player.getY() + pHeight/2, next.getX() - player.getX() + pWidth/2, next.getY() - player.getY() + pHeight/2);
                 if(player != null)
-                    physics(new Line2D.Double(previous.getX(), previous.getY(), next.getX(), next.getY()));//new Line2D.Double(previous.getX(), previous.getY(), next.getX(), next.getY()));
+                    physics(player, new Line2D.Double(previous.getX(), previous.getY(), next.getX(), next.getY()));//new Line2D.Double(previous.getX(), previous.getY(), next.getX(), next.getY()));
+                if(mobs.get(0) != null)
+                    for(int i = 0;i<mobs.size();i++)
+                        physics(mobs.get(i), new Line2D.Double(previous.getX(), previous.getY(), next.getX(), next.getY()));
                 previous = next;
             }
             if(player != null)
@@ -401,14 +425,15 @@ public class PolyRacer extends Applet
                     player.setVelocityX(player.getVelocityX() - 1);
                 else if(player.getVelocityX() < 0)
                     player.setVelocityX(player.getVelocityX() + 1);
-                if(up && grounded)
+                if(up && player.isGrounded())
                 {
-                    grounded = false;
+                    player.setGrounded(false);
                     player.setJumpTimer(15);
                     player.setVelocityY(player.getJumpPower());
                 }
             }
         }
+        ai();
     }
 
     /**
@@ -487,7 +512,8 @@ public class PolyRacer extends Applet
             if(player == null)
             {
                 player = new Player(new Rectangle((int) (m.getX() * scaleAnimation), (int) ((m.getY() - (((double) dataMin) / ((double) pHeight / ((double) dataMax - (double) dataMin))) * scaleAnimation) * scaleAnimation), 10, 20));
-                //for(int i = 0;i< random.nextInt(5 + 5))
+                for(int i = 0;i< random.nextInt(5)+5; i++)
+                    mobs.add(new Monster(new Rectangle(random.nextInt((int)path.get(path.size()-1).getX()), 0, 15, 15)));
                 //player.setRectangle(new Rectangle((int)(player.getRectangle().getX() * scaleAnimation), (int) ((player.getRectangle().getY() - 20) * scaleAnimation), 10, 20));
                 //System.out.println("playerx: "+(int) (m.getX() * scaleAnimation) + "playery: "+(int) ((m.getY() - yy) * scaleAnimation));
                 //System.out.println("playerx: "+e.getX() * scaleAnimation  + "playery: "+(e.getY() - yy) * scaleAnimation);
