@@ -29,7 +29,7 @@ public class PolyRacer extends Applet
     Graphics bufferGraphics;
     BufferedImage bf = new BufferedImage(pWidth, pHeight, BufferedImage.TYPE_INT_RGB);
     Point mouse = new Point(0, 0);
-    ArrayList<Point> path = new ArrayList<Point>(), data = new ArrayList<Point>();
+    ArrayList<Point> path = new ArrayList<Point>(), data = new ArrayList<Point>(), backgroundData = new ArrayList<Point>();
     Player player = null;
     boolean right = false, left = false, up = false, down = false, scaled = false;
     int framesPerSecond = 60, view = 0;
@@ -150,14 +150,17 @@ public class PolyRacer extends Applet
             {
                 j = 1;
             }
+
+            int randomMess = random.nextInt(150);
+            int randomValue = random.nextInt(50);
+            int randomOffset = random.nextInt(70);
             if(dipp)
             {
-                int randomValue = random.nextInt(50);
-                int randomOffset = random.nextInt(70);
-
 
                 //Main dipped dots
                 data.add(new Point((int) ((double) (pWidth) / 10000 * i), randomValue + pHeight / 2 + 25));
+                data.add(new Point((int) ((double) i), randomMess + pHeight / 3 + 20));
+                data.add(new Point((int) ((double) i), randomMess + pHeight / 2));
 
                 if(i < 99999)
                 {
@@ -168,10 +171,10 @@ public class PolyRacer extends Applet
             }
             else
             {
-                int randomValue = random.nextInt(50);
-                int randomOffset = random.nextInt(70);
 
                 data.add(new Point((int) ((double) (pWidth) / 10000 * i), randomValue + pHeight / 2 - 25));
+                data.add(new Point((int) ((double) i), randomMess + pHeight / 3 + 20 ));
+                data.add(new Point((int) ((double) i), randomMess + pHeight / 2));
 
                 if(i < 99999)
                 {
@@ -231,6 +234,7 @@ public class PolyRacer extends Applet
             g2.setColor(Color.white);
             for(int i = 0; i < 10000; i++)
                 g2.drawRect((int) data.get(i).getX(), (int) data.get(i).getY(), 1, 1);
+
             g2.setColor(Color.green);
             Point previous = null, next = null;
             Iterator<Point> it = path.iterator();
