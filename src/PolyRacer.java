@@ -321,12 +321,13 @@ public class PolyRacer extends Applet
                     //Shape current = new Line2D.Double(previous.getX()- player.getX() + pWidth/2, previous.getY() - player.getY() + pHeight/2, next.getX() - player.getX() + pWidth/2, next.getY() - player.getY() + pHeight/2);
                     //g2.draw(current);
                     //Shape current = new Line2D.Double(previous.getX()- player.getX() + pWidth/2, previous.getY() - player.getY() + pHeight/2, next.getX() - player.getX() + pWidth/2, next.getY() - player.getY() + pHeight/2);
-                    g2.draw(new Line2D.Double(previous.getX()- player.getX() + pWidth/2, previous.getY() - player.getY() + pHeight/2, next.getX() - player.getX() + pWidth/2, next.getY() - player.getY() + pHeight/2));
+                    g2.setStroke(new BasicStroke(2));
+                    g2.draw(new Line2D.Double((int)(previous.getX()- player.getX() + pWidth/2), (int)(previous.getY() - player.getY() + pHeight/2), (int)(next.getX() - player.getX() + pWidth/2), (int)(next.getY() - player.getY() + pHeight/2)));
                     if(player != null)
-                        physics(new Line2D.Double(previous.getX(), previous.getY() , next.getX(), next.getY()));//new Line2D.Double(previous.getX(), previous.getY(), next.getX(), next.getY()));
+                        physics(new Line2D.Double(previous.getX(), previous.getY(), next.getX(), next.getY()));//new Line2D.Double(previous.getX(), previous.getY(), next.getX(), next.getY()));
                     previous = next;
                 }
-                g2.fillOval((int) (previous.getX() - player.getX() + pWidth/2 - 5), (int) (previous.getY()- player.getY() + pHeight/2 - 5), 10, 10);
+                g2.fillOval((int) (previous.getX() - player.getX() + pWidth/2 - 5), (int)(previous.getY()- player.getY() + pHeight/2 - 5), 10, 10);
 
             }
             g2.setColor(Color.red);
@@ -352,9 +353,9 @@ public class PolyRacer extends Applet
         if(player.getRectangle().intersectsLine(current))//player.getRectangle().intersectsLine((Line2D) current))
         {
             player.setVelocityY(3);
-            while(player.getRectangle().intersectsLine(current))
-                player.setRectangle(new Rectangle((int) player.getX(), (int) (player.getY() - 1), 10, 20));
-            player.setRectangle(new Rectangle((int) player.getX(), (int) (player.getY() + 1), 10, 20));
+            //while(player.getRectangle().intersectsLine(current))
+                //player.setRectangle(new Rectangle((int) player.getX(), (int) (player.getY() - 1), 10, 20));
+            //player.setRectangle(new Rectangle((int) player.getX(), (int) (player.getY() - 1), 10, 20));
         }
         else
             player.setVelocityY(-1);
@@ -363,6 +364,22 @@ public class PolyRacer extends Applet
 
     public void gameUpdate()
     {
+        Point previous = null, next = null;
+        Iterator<Point> it = path.iterator();
+        while(it.hasNext())
+        {//prints the line/land
+            if(previous == null)
+                previous = it.next();
+            else
+            {
+                next = it.next();
+                //Shape current = new Line2D.Double(previous.getX()- player.getX() + pWidth/2, previous.getY() - player.getY() + pHeight/2, next.getX() - player.getX() + pWidth/2, next.getY() - player.getY() + pHeight/2);
+                //g2.draw(current);
+                //Shape current = new Line2D.Double(previous.getX()- player.getX() + pWidth/2, previous.getY() - player.getY() + pHeight/2, next.getX() - player.getX() + pWidth/2, next.getY() - player.getY() + pHeight/2);
+                 if(player != null)
+                    physics(new Line2D.Double(previous.getX(), previous.getY(), next.getX(), next.getY()));//new Line2D.Double(previous.getX(), previous.getY(), next.getX(), next.getY()));
+                previous = next;
+            }
         if(player != null)
         {
             if(left)
@@ -374,7 +391,7 @@ public class PolyRacer extends Applet
             else if(player.getVelocityX() < 0)
                 player.setVelocityX(player.getVelocityX() + 1);
             if(up)
-                player.setVelocityY(5);
+                player.setVelocityY(10);
         }
     }
 
