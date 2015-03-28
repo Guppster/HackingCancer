@@ -30,8 +30,9 @@ public class PolyRacer extends Applet
     BufferedImage bf = new BufferedImage(pWidth, pHeight, BufferedImage.TYPE_INT_RGB);
     Point mouse = new Point(0, 0);
     ArrayList<Point> path = new ArrayList<Point>(), data = new ArrayList<Point>();
+    ArrayList<Monster> mobs = new ArrayList<Monster>();
     Player player = null;
-    boolean right = false, left = false, up = false, down = false, scaled = false;
+    boolean right = false, left = false, up = false, down = false, scaled = false, grounded = false;
     int framesPerSecond = 60, view = 0;
     double scaleAnimation = 1, score = 0;
 
@@ -286,7 +287,7 @@ public class PolyRacer extends Applet
                     data.set(i, new Point((int) (data.get(i).getX() * scaleAnimation), (int) ((data.get(i).getY() - (((double) dataMin) / ((double) pHeight / ((double) dataMax - (double) dataMin))) * scaleAnimation) * scaleAnimation)));
                 for(int j = 0; j < path.size(); j++)
                     path.set(j, new Point((int) (path.get(j).getX() * scaleAnimation), (int) ((path.get(j).getY() - (((double) dataMin) / ((double) pHeight / ((double) dataMax - (double) dataMin))) * scaleAnimation) * scaleAnimation)));
-                player.setRectangle(new Rectangle((int) (player.getX() * scaleAnimation), (int) ((player.getY() - (((double) dataMin) / ((double) pHeight / ((double) dataMax - (double) dataMin))) * scaleAnimation) * scaleAnimation), 10, 20));
+                player.setRectangle(new Rectangle((int) (player.getX() * scaleAnimation), 0, 10, 20));
                 scaled = true;
             }
             g2.setColor(Color.cyan);
@@ -323,8 +324,8 @@ public class PolyRacer extends Applet
                     //Shape current = new Line2D.Double(previous.getX()- player.getX() + pWidth/2, previous.getY() - player.getY() + pHeight/2, next.getX() - player.getX() + pWidth/2, next.getY() - player.getY() + pHeight/2);
                     g2.setStroke(new BasicStroke(2));
                     g2.draw(new Line2D.Double((int)(previous.getX()- player.getX() + pWidth/2), (int)(previous.getY() - player.getY() + pHeight/2), (int)(next.getX() - player.getX() + pWidth/2), (int)(next.getY() - player.getY() + pHeight/2)));
-                    if(player != null)
-                        physics(new Line2D.Double(previous.getX(), previous.getY(), next.getX(), next.getY()));//new Line2D.Double(previous.getX(), previous.getY(), next.getX(), next.getY()));
+                    //if(player != null)
+                      //  physics(new Line2D.Double(previous.getX(), previous.getY(), next.getX(), next.getY()));//new Line2D.Double(previous.getX(), previous.getY(), next.getX(), next.getY()));
                     previous = next;
                 }
                 g2.fillOval((int) (previous.getX() - player.getX() + pWidth/2 - 5), (int)(previous.getY()- player.getY() + pHeight/2 - 5), 10, 10);
@@ -348,22 +349,32 @@ public class PolyRacer extends Applet
 
     public void physics(Line2D current)
     {
-        //System.out.println("X: " + player.getX() + " Y: " + player.getY());
-        //System.out.println("X: " + path.get(0).getX() + " Y: " + path.get(0).getY() + "  " + path.size());
+
         if(player.getRectangle().intersectsLine(current))//player.getRectangle().intersectsLine((Line2D) current))
         {
-            player.setVelocityY(3);
-            //while(player.getRectangle().intersectsLine(current))
-                //player.setRectangle(new Rectangle((int) player.getX(), (int) (player.getY() - 1), 10, 20));
-            //player.setRectangle(new Rectangle((int) player.getX(), (int) (player.getY() - 1), 10, 20));
+            grounded = true;
+            //player.setVelocityY(3);
+            while(player.getRectangle().intersectsLine(current))
+                player.setRectangle(new Rectangle((int) player.getX(), (int) (player.getY() - 1), 10, 20));
+            player.setRectangle(new Rectangle((int) player.getX(), (int) (player.getY() - 1), 10, 20));
         }
-        else
-            player.setVelocityY(-1);
-        player.update();
     }
 
     public void gameUpdate()
     {
+        //System.out.println("X: " + player.getX() + " Y: " + player.getY());
+        //System.out.println("X: " + path.get(0).getX() + " Y: " + path.get(0).getY() + "  " + path.size());
+        if(player != null)
+        {
+            if(player.getJumpTimer() > 0)
+            {
+                player.setJumpTimer(player.getJumpTimer() - 1);
+                player.setVelocityY(player.getJumpPower());
+            }
+            else if(player.getVelocityY() >= 0)
+                player.setVelocityY(player.getVelocityY() - 1);
+            player.update();
+        }
         Point previous = null, next = null;
         Iterator<Point> it = path.iterator();
         while(it.hasNext())
@@ -376,22 +387,27 @@ public class PolyRacer extends Applet
                 //Shape current = new Line2D.Double(previous.getX()- player.getX() + pWidth/2, previous.getY() - player.getY() + pHeight/2, next.getX() - player.getX() + pWidth/2, next.getY() - player.getY() + pHeight/2);
                 //g2.draw(current);
                 //Shape current = new Line2D.Double(previous.getX()- player.getX() + pWidth/2, previous.getY() - player.getY() + pHeight/2, next.getX() - player.getX() + pWidth/2, next.getY() - player.getY() + pHeight/2);
-                 if(player != null)
+                if(player != null)
                     physics(new Line2D.Double(previous.getX(), previous.getY(), next.getX(), next.getY()));//new Line2D.Double(previous.getX(), previous.getY(), next.getX(), next.getY()));
                 previous = next;
             }
-        if(player != null)
-        {
-            if(left)
-                player.setVelocityX(-1);
-            else if(right)
-                player.setVelocityX(1);
-            else if(player.getVelocityX() > 0)
-                player.setVelocityX(player.getVelocityX() - 1);
-            else if(player.getVelocityX() < 0)
-                player.setVelocityX(player.getVelocityX() + 1);
-            if(up)
-                player.setVelocityY(10);
+            if(player != null)
+            {
+                if(left)
+                    player.setVelocityX(-1);
+                else if(right)
+                    player.setVelocityX(1);
+                else if(player.getVelocityX() > 0)
+                    player.setVelocityX(player.getVelocityX() - 1);
+                else if(player.getVelocityX() < 0)
+                    player.setVelocityX(player.getVelocityX() + 1);
+                if(up && grounded)
+                {
+                    grounded = false;
+                    player.setJumpTimer(15);
+                    player.setVelocityY(player.getJumpPower());
+                }
+            }
         }
     }
 
@@ -471,6 +487,7 @@ public class PolyRacer extends Applet
             if(player == null)
             {
                 player = new Player(new Rectangle((int) (m.getX() * scaleAnimation), (int) ((m.getY() - (((double) dataMin) / ((double) pHeight / ((double) dataMax - (double) dataMin))) * scaleAnimation) * scaleAnimation), 10, 20));
+                //for(int i = 0;i< random.nextInt(5 + 5))
                 //player.setRectangle(new Rectangle((int)(player.getRectangle().getX() * scaleAnimation), (int) ((player.getRectangle().getY() - 20) * scaleAnimation), 10, 20));
                 //System.out.println("playerx: "+(int) (m.getX() * scaleAnimation) + "playery: "+(int) ((m.getY() - yy) * scaleAnimation));
                 //System.out.println("playerx: "+e.getX() * scaleAnimation  + "playery: "+(e.getY() - yy) * scaleAnimation);
