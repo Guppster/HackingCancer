@@ -18,7 +18,7 @@ public class Monster extends Sprite
         this.setY(rect.getX());
         this.setRectangle(rect);
     }
-    public String nextMove(Player player)
+    public void nextMove(Player player)
     {
         double playerX = player.getRectangle().getX();
         double playerY = player.getRectangle().getY();
@@ -27,59 +27,76 @@ public class Monster extends Sprite
         double monsterX = this.getRectangle().getX();
         double monsterY = this.getRectangle().getY();
 
-        double playerJumpAttackableRight = playerX + 20;
-        double playerJumpAttackableLeft = playerX - 20;
-
-
-        double differenceBetweenSprites = monsterX - playerX;
-
         //Use players direction and velocity to determine the next move of the AI monster
+
+        //If Monster is on the right side of Player
         if(playerX < monsterX)
         {
             if(player.isFacingRight() && playerVelocity > 0)
             {
-                //Fake Run Away
+               this.setVelocityX(1.5);
 
                 //Wait till he gets close (20 pixel approx. range)
                 if(monsterX - playerX < 20)
                 {
-                    //Turn Around
+                    //Stop and turn around
+                    this.setVelocityX(-1);
+
                     //Jump at him!
+                    if(this.isGrounded())
+                    {
+                        this.setGrounded(false);
+                        this.setJumpTimer(10);
+                        this.setVelocityY(this.getJumpPower());
+                    }
+
                 }
 
             }
             else
             {
-                //Chase (Max Negative Velocity)
+                //Chance (Max Positive Velocity)
+                this.setVelocityX(-1.5);
             }
         }
+        //If Player is on the right side of Monster
         else if(playerX > monsterX)
         {
             if(!player.isFacingRight())
             {
-                //Fake Run Away
+                this.setVelocityX(-1.5);
 
                 //Wait till he gets close (20 pixel approx. range)
                 if(playerX - monsterX < 20)
                 {
-                    //Turn Around
+                    //Stop and turn around
+                    this.setVelocityX(1);
+
                     //Jump at him!
+                    if(this.isGrounded())
+                    {
+                        this.setGrounded(false);
+                        this.setJumpTimer(10);
+                        this.setVelocityY(this.getJumpPower());
+                    }
                 }
             }
             else
             {
                 //Chase (Max Positive Velocity)
+                this.setVelocityX(-1.5);
             }
         }
+        //If the player is jumping within range of monster, monster jumps to hit from underneath before player can jump over
         else if(playerY > monsterY && (((playerX > monsterX) && playerX - monsterX < 20) || (playerX < monsterX) && monsterX - playerX < 20))
         {
-            //JUMP AND REKT HIM BRUH
+            //Jump from underneath and kill player
+            if(this.isGrounded())
+            {
+                this.setGrounded(false);
+                this.setJumpTimer(10);
+                this.setVelocityY(this.getJumpPower());
+            }
         }
-        else if(player.getRectangle().intersects(this.getRectangle()))
-        {
-            //KILL HIM
-        }
-
-        return "MOVE";
-    }
+    }//End of nextMove method
 }//End of monster class
