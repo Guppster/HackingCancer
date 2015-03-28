@@ -20,7 +20,6 @@ public class PolyRacer extends Applet
    private static final long serialVersionUID = 1L;
    static Random random = new Random ();//used to create random numbers
    Thread th, l, s;//threads
-   //volatile int textFocus = 0;
    Font font;
    Dimension dim;
    private static final int NO_DELAYS_PER_YIELD = 16;
@@ -29,10 +28,12 @@ public class PolyRacer extends Applet
    Graphics bufferGraphics; 
    BufferedImage bf = new BufferedImage (pWidth, pHeight,BufferedImage.TYPE_INT_RGB);
    Point mouse = new Point(0, 0), thing = new Point(50, 50);
+
    boolean right = false, left = false, up = false, down = false;
    int framesPerSecond = 60, view = 0;
           double scaleAnimation = 1;
-   Point[] data = new Point[600];
+   Point[] data = new Point[10000];
+
    long period = ((long)(1000/framesPerSecond))*1000000L;
    Rectangle startButton;
 
@@ -63,17 +64,70 @@ public class PolyRacer extends Applet
 	*/
    public void init()
    {
-      setSize(pWidth,pHeight);
+      boolean dipp = false;
+
+      setSize(pWidth, pHeight);
       setBackground(Color.black);
+
       dim = getSize(); 
-      bufferGraphics = bf.getGraphics(); 
-      addKeyListener (this);
-      addMouseListener (this);
+      bufferGraphics = bf.getGraphics();
+
+      addKeyListener(this);
+      addMouseListener(this);
       addMouseMotionListener (this);
+
       font = new Font ("Impact", Font.PLAIN, 20);
+
        startButton = new Rectangle(pWidth - 101, pHeight - 51, 100, 50);
-      for(int i = 0; i < 600; i++)
-         data[i] = new Point(i, random.nextInt(50) + 150);
+
+      for(int i = 0, j = 0; i < 10000; i++)
+      {
+         int switchVar = random.nextInt(25)+1;
+
+         if(j%switchVar == 0)
+         {
+            dipp = random.nextBoolean();
+         }
+
+         if(j==0)
+         {
+            j=1;
+         }
+
+         if(dipp)
+         {
+            int randomValue = random.nextInt(50);
+            int randomOffset = random.nextInt(70);
+            dataMax = randomValue + randomOffset + 200;
+
+            //Main dipped dots
+            data[i] = new Point((int)(600.0/10000*i), randomValue + 200);
+
+            if(i < 99999)
+            {
+               //Random Extra dots
+               data[++i] = new Point((int)(600.0/10000*i), dataMax);
+            }
+
+         }
+         else
+         {
+            int randomValue = random.nextInt(50);
+            int randomOffset = random.nextInt(70);
+            dataMin = randomValue - randomOffset + 200;
+            
+            data[i] = new Point((int)(600.0/10000*i), randomValue + 150);
+
+            if(i < 99999)
+            {
+               //Random Extra dots
+               data[++i] = new Point((int)(600.0/10000*i), dataMin);
+            }
+
+         }
+
+      }
+
       start();//starts main thread
    }
 
@@ -90,7 +144,7 @@ public class PolyRacer extends Applet
    {
       paint(g);
    }
-   
+
    /**This method is used to print everything to the screen
 	*@param g used to print graphics
 	*/
@@ -107,11 +161,12 @@ public class PolyRacer extends Applet
       }
        Graphics2D g2 = (Graphics2D) bufferGraphics;
       g2.setFont (font);
+
       g2.setColor(Color.black);
       g2.fillRect(0, 0, 600, 400);
        if(view == 0) {
            g2.setColor(Color.white);
-           for (int i = 0; i < 600; i++)
+           for (int i = 0; i < 10000; i++)
                g2.drawRect((int) data[i].getX(), (int) data[i].getY(), 1, 1);
            drawButton(g2);
        }
@@ -122,16 +177,16 @@ public class PolyRacer extends Applet
            else if(scaleAnimation>pHeight/(dataMax-dataMin))
                scaleAnimation = pHeight/(dataMax-dataMin);
            g2.setColor(Color.white);
-           for (int i = 0; i < 600; i++)
+           for (int i = 0; i < 10000; i++)
                g2.drawRect((int) (data[i].getX()*scaleAnimation), (int) ((data[i].getY() - (((double)dataMin)/((double)pHeight/((double)dataMax-(double)dataMin)))*scaleAnimation    )*scaleAnimation), 1, 1);
        }
+
       g2.fillRect((int)mouse.getX(), (int)mouse.getY(), 10, 10);
       g2.fillRect((int)thing.getX(), (int)thing.getY(), 10, 10);
       //for double buffer, when it is done printing everything
       //bufferGraphics.drawString (powerups.size() + "", 100, 100);
       g.drawImage(bf,0,0,this);
    }
-
       
    public void gameUpdate()
    {
@@ -143,7 +198,6 @@ public class PolyRacer extends Applet
          thing.translate(0, -1);
       if(down)
          thing.translate(0, 1);
-
    }
    
    /**Main thread that is started at the start of the program and calls everything to make the game smooth
