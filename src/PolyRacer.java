@@ -366,32 +366,30 @@ public class PolyRacer extends Applet
     {
         Point previous = null, next = null;
         Iterator<Point> it = path.iterator();
-        while(it.hasNext())
-        {//prints the line/land
-            if(previous == null)
+        while (it.hasNext()) {//prints the line/land
+            if (previous == null)
                 previous = it.next();
-            else
-            {
+            else {
                 next = it.next();
                 //Shape current = new Line2D.Double(previous.getX()- player.getX() + pWidth/2, previous.getY() - player.getY() + pHeight/2, next.getX() - player.getX() + pWidth/2, next.getY() - player.getY() + pHeight/2);
                 //g2.draw(current);
                 //Shape current = new Line2D.Double(previous.getX()- player.getX() + pWidth/2, previous.getY() - player.getY() + pHeight/2, next.getX() - player.getX() + pWidth/2, next.getY() - player.getY() + pHeight/2);
-                 if(player != null)
+                if (player != null)
                     physics(new Line2D.Double(previous.getX(), previous.getY(), next.getX(), next.getY()));//new Line2D.Double(previous.getX(), previous.getY(), next.getX(), next.getY()));
                 previous = next;
             }
-        if(player != null)
-        {
-            if(left)
-                player.setVelocityX(-1);
-            else if(right)
-                player.setVelocityX(1);
-            else if(player.getVelocityX() > 0)
-                player.setVelocityX(player.getVelocityX() - 1);
-            else if(player.getVelocityX() < 0)
-                player.setVelocityX(player.getVelocityX() + 1);
-            if(up)
-                player.setVelocityY(10);
+            if (player != null) {
+                if (left)
+                    player.setVelocityX(-1);
+                else if (right)
+                    player.setVelocityX(1);
+                else if (player.getVelocityX() > 0)
+                    player.setVelocityX(player.getVelocityX() - 1);
+                else if (player.getVelocityX() < 0)
+                    player.setVelocityX(player.getVelocityX() + 1);
+                if (up)
+                    player.setVelocityY(10);
+            }
         }
     }
 
