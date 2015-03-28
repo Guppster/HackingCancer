@@ -11,10 +11,6 @@ import java.util.*;
 import java.awt.geom.Line2D;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-//import java.io.BufferedInputStream;
-//import java.io.*;
-//import javax.imageio.*;
-//import javax.swing.ImageIcon;
 public class PolyRacer extends Applet
  implements MouseListener, MouseMotionListener, KeyListener, Runnable, WindowListener
 {
@@ -41,7 +37,7 @@ public class PolyRacer extends Applet
    Image mainMenu, highscores, extras;
    boolean right = false, left = false, up = false, down = false, play = false, limbo = false, textBoxRunning = false;
    int framesPerSecond = 60;
-   Line2D[] data = new Line2D[600];
+   Point[] data = new Point[600];
    long period = ((long)(1000/framesPerSecond))*1000000L;
    
    public Image getImage(String f)
@@ -80,7 +76,7 @@ public class PolyRacer extends Applet
       addMouseMotionListener (this);
       font = new Font ("Impact", Font.PLAIN, 20);
       for(int i = 0; i < 600; i++)
-         data[i] = new Line2D.Double(i, random.nextInt(50) + 150, i, random.nextInt(50) + 200);
+         data[i] = new Point(i, random.nextInt(50) + 150);
       /*Thread t = new Thread(createCubes);//starts thread to creates cubes
       t.start();
       Thread p = new Thread(createPowerups);//starts thread to create powerups
@@ -176,7 +172,7 @@ public class PolyRacer extends Applet
       g2.fillRect(0, 0, 600, 400);
       g2.setColor(Color.white);
       for(int i = 0; i < 600; i++)
-          g2.draw(data[i]);
+          g2.drawRect((int)data[i].getX(), (int)data[i].getY(), 1, 1);
    
       g2.fillRect((int)mouse.getX(), (int)mouse.getY(), 10, 10);
       g2.fillRect((int)thing.getX(), (int)thing.getY(), 10, 10);
@@ -322,9 +318,9 @@ public class PolyRacer extends Applet
       long excess = 0L;
       while (true)
       {
+         beforeTime = System.nanoTime();
          gameUpdate(); 
          repaint();
-         beforeTime = System.nanoTime();
          afterTime = System.nanoTime();
          timeDiff = afterTime - beforeTime;
          sleepTime = (period - timeDiff) - overSleepTime;  
