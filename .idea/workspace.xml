@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8feabb52-d4c8-40b8-a0a2-c71447e029db" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/PolyRacer.java" afterPath="$PROJECT_DIR$/src/PolyRacer.java" />
-    </list>
+    <list default="true" id="8feabb52-d4c8-40b8-a0a2-c71447e029db" name="Default" comment="" />
     <ignored path="Hacking.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/out/" />
@@ -27,8 +25,8 @@
       <file leaf-file-name="PolyRacer.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/PolyRacer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.7635135">
-              <caret line="178" column="29" selection-start-line="178" selection-start-column="29" selection-end-line="178" selection-end-column="29" />
+            <state vertical-scroll-proportion="0.44763514">
+              <caret line="167" column="131" selection-start-line="167" selection-start-column="131" selection-end-line="167" selection-end-column="131" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#1117#1124#0" expanded="true" />
@@ -380,7 +378,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-9" y="-9" width="1938" height="1050" extended-state="6" />
+    <frame x="-9" y="-9" width="1938" height="1050" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -554,8 +552,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/PolyRacer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7635135">
-          <caret line="178" column="29" selection-start-line="178" selection-start-column="29" selection-end-line="178" selection-end-column="29" />
+        <state vertical-scroll-proportion="0.44763514">
+          <caret line="167" column="131" selection-start-line="167" selection-start-column="131" selection-end-line="167" selection-end-column="131" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#1117#1124#0" expanded="true" />
