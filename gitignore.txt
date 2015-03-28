@@ -1,0 +1,23 @@
+*.class
+bin/
+
+# Junk Files
+.DS_Store
+Desktop.ini
+
+# Eclipse project files
+.project
+.classpath
+.settings/
+
+# Netbeans project files
+nbproject/
+nbactions.xml
+
+# IntelliJ IDEA project files
+.idea/
+out/
+Project.iml
+
+# Maven
+target/
