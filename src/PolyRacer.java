@@ -23,23 +23,19 @@ public class PolyRacer extends Applet
    //volatile int textFocus = 0;
    Font font;
    Dimension dim;
-   //String [] extrasTextBoxes = new String [8];
-   //int type = 0, renderDistance = 50;
-   //double printTimer = 0;
-   //private long framesSkipped = 0L;
    private static final int NO_DELAYS_PER_YIELD = 16;
    private static int MAX_FRAME_SKIPS = 5;
-   static int pWidth = 600, pHeight = 400;
+   static int pWidth = 600, pHeight = 400, dataMax = 200, dataMin = 150;
    Graphics bufferGraphics; 
    BufferedImage bf = new BufferedImage (pWidth, pHeight,BufferedImage.TYPE_INT_RGB);
-   int menu = 0;
    Point mouse = new Point(0, 0), thing = new Point(50, 50);
-   Image mainMenu, highscores, extras;
-   boolean right = false, left = false, up = false, down = false, play = false, limbo = false, textBoxRunning = false;
-   int framesPerSecond = 60;
+   boolean right = false, left = false, up = false, down = false;
+   int framesPerSecond = 60, view = 0;
+          double scaleAnimation = 1;
    Point[] data = new Point[600];
    long period = ((long)(1000/framesPerSecond))*1000000L;
-   
+   Rectangle startButton;
+
    public Image getImage(String f)
    {
       Image img = null;
@@ -75,18 +71,17 @@ public class PolyRacer extends Applet
       addMouseListener (this);
       addMouseMotionListener (this);
       font = new Font ("Impact", Font.PLAIN, 20);
+       startButton = new Rectangle(pWidth - 101, pHeight - 51, 100, 50);
       for(int i = 0; i < 600; i++)
          data[i] = new Point(i, random.nextInt(50) + 150);
-      /*Thread t = new Thread(createCubes);//starts thread to creates cubes
-      t.start();
-      Thread p = new Thread(createPowerups);//starts thread to create powerups
-      p.start();
-      try{p.join(500);}//waits for thread to finish
-      catch (InterruptedException e){}
-      try{t.join(500);}//waits for thread to finish
-      catch (InterruptedException e){}*/
       start();//starts main thread
    }
+
+    public void drawButton(Graphics2D g)
+    {
+        g.setColor(Color.red);
+        g.drawRect((int)startButton.getX(), (int)startButton.getY(), (int)startButton.getWidth(), (int)startButton.getHeight());
+    }
 
    /**when something changes it calls this to update the screen
 	*@param g used to print graphics
@@ -94,38 +89,6 @@ public class PolyRacer extends Applet
    public void update(Graphics g)
    {
       paint(g);
-   }
-   
-      /*
-      Thread s = new Thread(sort);//starts thread to sort cubes
-            s.start();
-            try{s.join(500);}//waits for thread to finish sorting the cubes
-            catch (InterruptedException ee){}*/
-   /**calls merge sort to sort the cubes depending on their z coordinate*/
-   Runnable sort = 
-      new Runnable() 
-      {
-         public void run() 
-         {
-            //cubes = mergeSort(cubes);
-         }
-      }; 
-      
-         /**draws the ground
-	*@param g used to print graphics
-	*@param c the colour to print the ground
-	*/
-   public void drawGround (Graphics g, Color c)
-   {
-      Graphics2D g2 = (Graphics2D)g.create();//for printing gradients
-      g2.setColor(c);
-      int [] groundX = {0, 600, 600, 0};//creates gradient that goes from light grey to the colour passed in the parameter
-      GradientPaint gradient = new GradientPaint(0,200,Color.lightGray,0,0,c,true);//light grey to make the fading effect
-      g2.setPaint(gradient);
-      int [] groundY = {5, 5};//(int)(195-(((la+(ra*(-1)))*2.8)*320)), (int)(195+(((la+(ra*(-1)))*2.8)*320)), 400, 400};//calculate x/y values
-      Polygon ground = new Polygon(groundX, groundY, 4);
-      g2.fillPolygon(ground);//prints the polygon
-      //}
    }
    
    /**This method is used to print everything to the screen
@@ -142,116 +105,33 @@ public class PolyRacer extends Applet
          else
             bufferGraphics = bf.getGraphics();
       }
-      //bufferGraphics.setColor(Color.black);
-      //bufferGraphics.fillRect(0, 0, 600, 400);
-      //Graphics2D g2d = (Graphics2D) bufferGraphics;//sets font for current score and highscore menu
        Graphics2D g2 = (Graphics2D) bufferGraphics;
       g2.setFont (font);
-      /*if(!limbo)//in between games i dont want to print the level
-      {//makes new thread for printing the level
-         Thread l = new Thread(printLevel);
-         l.start();
-         try{l.join(500);}//waits for it to finish
-         catch(Exception e){System.out.println("Failed to wait for printLevel");}
-      }
-      if(play)//if game is started it prints ship
-      {
-         Thread s = new Thread(printShip);
-         s.start();
-         if(c.z-100<printTimer)
-         {
-            bufferGraphics.setColor(Color.green);
-            bufferGraphics.drawString(powerupType[type],(pWidth/2)-100, 100);
-         }
-         try{s.join(500);}
-         catch(Exception e){}
-      }
-      else if(limbo)
-      {*/
       g2.setColor(Color.black);
       g2.fillRect(0, 0, 600, 400);
-      g2.setColor(Color.white);
-      for(int i = 0; i < 600; i++)
-          g2.drawRect((int)data[i].getX(), (int)data[i].getY(), 1, 1);
-   
+       if(view == 0) {
+           g2.setColor(Color.white);
+           for (int i = 0; i < 600; i++)
+               g2.drawRect((int) data[i].getX(), (int) data[i].getY(), 1, 1);
+           drawButton(g2);
+       }
+       else if(view == 1)
+       {
+           if(scaleAnimation<pHeight/(dataMax-dataMin))
+           scaleAnimation+=0.01;
+           else if(scaleAnimation>pHeight/(dataMax-dataMin))
+               scaleAnimation = pHeight/(dataMax-dataMin);
+           g2.setColor(Color.white);
+           for (int i = 0; i < 600; i++)
+               g2.drawRect((int) (data[i].getX()*scaleAnimation), (int) ((data[i].getY() - (((double)dataMin)/((double)pHeight/((double)dataMax-(double)dataMin)))*scaleAnimation    )*scaleAnimation), 1, 1);
+       }
       g2.fillRect((int)mouse.getX(), (int)mouse.getY(), 10, 10);
       g2.fillRect((int)thing.getX(), (int)thing.getY(), 10, 10);
       //for double buffer, when it is done printing everything
       //bufferGraphics.drawString (powerups.size() + "", 100, 100);
       g.drawImage(bf,0,0,this);
    }
-   
-   /**does all movement, moves the camera and the ship
-	*/
-   Runnable movement = 
-      new Runnable() 
-      {
-         public void run() 
-         {
-            /*if(play)
-            {
-               if(c.z-100>pUp && pUp != 0)//for powerup that levitates you above the cubes
-                  pUp=0;
-               if(pUp!=0 && shipYPosition < 5)//brings you up
-               {
-                  shipYPosition+=0.05;
-                  ship.move(0,0.05,0);
-               }
-               else if(pUp==0 && shipYPosition > 0)//brings you back down
-               {
-                  shipYPosition-=0.05;
-                  ship.move(0,-0.05,0);
-               }
-               if(left)//left
-                  la += acceleration;
-               else
-               {
-                  if(la>0)
-                     la-=handling;
-                  if(la<0)
-                     la=0;
-               }
-               if(right)//right
-                  ra += acceleration;
-               else
-               {
-                  if(ra>0)
-                     ra-=handling;
-                  if(ra<0)
-                     ra=0;
-               }//has max turn speed so they cant turn away from cubes
-               if(ra>maxTurn)//faster than they spawn resulting in invincibility
-                  ra = maxTurn;
-               if(la>maxTurn)
-                  la = maxTurn;
-               if(c.z-100>slow && slow != 0)//slow powerup
-                  slow=0;
-               if(turbo<speed && turbo !=0)//turbo powerup
-                  turbo=0;
-               if(slow>0)
-                  ship.move(0,0,startSpeed);//moves ship with camera
-               else if(turbo>0)
-                  ship.move(0,0,turbo);
-               else
-                  ship.move(0,0,speed);
-               ship.move((ra*(-1)),0,0);//moving ship left/right with camera
-               ship.move(la,0,0);
-               c.x-=ra;//moving camera left/right
-               c.x+=la;
-            }
-            else if(c.z > 20000)//during main menu the speed increases
-               c.z=0;//the prevents it from getting too high
-            if(slow>0)//always moves camera(for main screen)
-               c.z+=startSpeed;
-            else if(turbo>0)
-            {
-               c.z+=turbo;
-               turbo-=0.02;
-            }
-            else
-               c.z+=speed;*/
-         }
-      };
+
       
    public void gameUpdate()
    {
@@ -263,49 +143,7 @@ public class PolyRacer extends Applet
          thing.translate(0, -1);
       if(down)
          thing.translate(0, 1);
-      /*if(menu == 2 && !textBoxRunning)
-      {
-         textBoxRunning = true;
-         Thread t = new Thread(textBox);//does movement
-         t.start();
-         //extrasTextBoxes[textFocus] = extrasTextBoxes[textFocus] + "|";
-      }
-      else if(menu != 2 && textBoxRunning)
-         textBoxRunning = false;
-      if(!limbo)//if in between games then dont do anything
-      {//used to optimaize game speed
-         rotation();//rotates screen
-         Thread m = new Thread(movement);//does movement
-         m.start();
-         if(c.z-100>resize && resize != 0)//after 100 units the blocks go back to normal size
-         {//when they have activated the resize powerup
-            resize=0;
-         }
-         Thread co = new Thread(collisions);//does collisions
-         co.start();
-         try{
-            if(cubes.get(0).getFrontZ()<c.z+renderDistance && cubes.size()<numberOfCubes*2+10)//respawns powerups and cubes
-            {
-               Thread p = new Thread(createPowerups);
-               p.start();
-               Thread t = new Thread(createCubes);
-               t.start();
-               try{t.join(500);}
-               catch (InterruptedException e){System.out.println("Not enought times whaa?");}
-            }
-         }
-         catch(IndexOutOfBoundsException e){}
-         catch(NullPointerException e){}
-      
-         try{m.join(500);}//waits for the thread to finish before continuing
-         catch (InterruptedException ee){}
-         try{co.join(500);}//waits for collisions to end
-         catch (InterruptedException ee){}
-         repaint();//repaints screen
-      }
-      else
-         repaint();*/
-   
+
    }
    
    /**Main thread that is started at the start of the program and calls everything to make the game smooth
@@ -318,9 +156,9 @@ public class PolyRacer extends Applet
       long excess = 0L;
       while (true)
       {
-         beforeTime = System.nanoTime();
          gameUpdate(); 
          repaint();
+          beforeTime = System.nanoTime();
          afterTime = System.nanoTime();
          timeDiff = afterTime - beforeTime;
          sleepTime = (period - timeDiff) - overSleepTime;  
@@ -354,12 +192,16 @@ public class PolyRacer extends Applet
 	*/
    public void mouseEntered (MouseEvent e)
    {
-      requestFocusInWindow(); 
+      requestFocusInWindow();
    }
    public void mouseExited (MouseEvent e)
    {}
    public void mouseClicked (MouseEvent e)
-   {}
+   {
+       Point m = new Point(e.getX(), e.getY());
+       if(startButton.contains(m))
+           view = 1;
+   }
    public void mouseDragged (MouseEvent e)
    {}
    /**changes the cursor to the hand when you can click on a button
@@ -368,7 +210,10 @@ public class PolyRacer extends Applet
    public void mouseMoved (MouseEvent e)
    {
       mouse.setLocation(e.getX(), e.getY());
-      
+       if(startButton.contains(mouse))
+           setCursor(new Cursor(Cursor.HAND_CURSOR));
+       else if(!(getCursor().equals(Cursor.CROSSHAIR_CURSOR)))
+           setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
    }
    /**used for main menu to check when they click buttons
 	*@param e contains mouse position
