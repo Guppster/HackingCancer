@@ -113,8 +113,7 @@ public class PolyRacer extends Applet
             int randomValue = random.nextInt(50);
             int randomOffset = random.nextInt(70);
             dataMax = randomValue - randomOffset + 200;
-
-            int randomValue = random.nextInt(50);
+            
             data[i] = new Point((int)(600.0/10000*i), randomValue + 150);
 
             if(i < 99999)
