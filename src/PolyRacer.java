@@ -26,7 +26,7 @@ public class PolyRacer extends Applet
    Dimension dim;
    private static final int NO_DELAYS_PER_YIELD = 16;
    private static int MAX_FRAME_SKIPS = 5;
-   static int pWidth = 600, pHeight = 400, dataMax = 200, dataMin = 150;
+   static int pWidth = 1200, pHeight = 800, dataMax = 200, dataMin = 150;
    Graphics bufferGraphics; 
    BufferedImage bf = new BufferedImage (pWidth, pHeight,BufferedImage.TYPE_INT_RGB);
    Point mouse = new Point(0, 0), thing = new Point(50, 50);
@@ -80,12 +80,12 @@ ArrayList<Point> path = new ArrayList<Point>();
 
       font = new Font ("Impact", Font.PLAIN, 20);
 
-       startButton = new Rectangle(pWidth - 101, pHeight - 51, 100, 50);
-      dataMax = 50 + 70 + 200;
-      dataMin = 130;
+      startButton = new Rectangle(pWidth - 101, pHeight - 51, 100, 50);
+      dataMax = 50 + 70 + (pHeight/2) + 50;
+      dataMin = -70 + pHeight/2-50;
       for(int i = 0, j = 0; i < 10000; i++)
       {
-         int switchVar = random.nextInt(25)+1;
+         int switchVar = random.nextInt(50)+1;
 
          if(j%switchVar == 0)
          {
@@ -104,12 +104,12 @@ ArrayList<Point> path = new ArrayList<Point>();
 
 
             //Main dipped dots
-            data[i] = new Point((int)(600.0/10000*i), randomValue + 200);
+            data[i] = new Point((int)((double)(pWidth)/10000*i), randomValue + pHeight/2+50);
 
             if(i < 99999)
             {
                //Random Extra dots
-               data[++i] = new Point((int)(600.0/10000*i), randomValue + randomOffset + 200);
+               data[++i] = new Point((int)((double)(pWidth)/10000*i), randomValue + randomOffset + pHeight/2+50);
             }
 
          }
@@ -118,12 +118,12 @@ ArrayList<Point> path = new ArrayList<Point>();
             int randomValue = random.nextInt(50);
             int randomOffset = random.nextInt(70);
 
-            data[i] = new Point((int)(600.0/10000*i), randomValue + 150);
+            data[i] = new Point((int)((double)(pWidth)/10000*i), randomValue + pHeight/2 -50);
 
             if(i < 99999)
             {
                //Random Extra dots
-               data[++i] = new Point((int)(600.0/10000*i), randomValue - randomOffset + 200);
+               data[++i] = new Point((int)((double)(pWidth)/10000*i), randomValue - randomOffset + pHeight/2-50);
             }
 
          }
@@ -165,7 +165,7 @@ ArrayList<Point> path = new ArrayList<Point>();
       g2.setFont (font);
 
       g2.setColor(Color.black);
-      g2.fillRect(0, 0, 600, 400);
+      g2.fillRect(0, 0, pWidth, pHeight);
        if(view == 0) {
            g2.setColor(Color.white);
            for (int i = 0; i < 10000; i++)
