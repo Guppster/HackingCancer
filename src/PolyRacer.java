@@ -149,7 +149,8 @@ public class PolyRacer extends Applet
       //bufferGraphics.setColor(Color.black);
       //bufferGraphics.fillRect(0, 0, 600, 400);
       //Graphics2D g2d = (Graphics2D) bufferGraphics;//sets font for current score and highscore menu
-      bufferGraphics.setFont (font);
+       Graphics2D g2 = (Graphics2D) bufferGraphics;
+      g2.setFont (font);
       /*if(!limbo)//in between games i dont want to print the level
       {//makes new thread for printing the level
          Thread l = new Thread(printLevel);
@@ -171,14 +172,14 @@ public class PolyRacer extends Applet
       }
       else if(limbo)
       {*/
-      bufferGraphics.setColor(Color.black);
-      bufferGraphics.fillRect(0, 0, 600, 400);
-      bufferGraphics.setColor(Color.white);
+      g2.setColor(Color.black);
+      g2.fillRect(0, 0, 600, 400);
+      g2.setColor(Color.white);
       for(int i = 0; i < 600; i++)
-         bufferGraphics.draw(data[i]);
+          g2.draw(data[i]);
    
-      bufferGraphics.fillRect((int)mouse.getX(), (int)mouse.getY(), 10, 10);
-      bufferGraphics.fillRect((int)thing.getX(), (int)thing.getY(), 10, 10);
+      g2.fillRect((int)mouse.getX(), (int)mouse.getY(), 10, 10);
+      g2.fillRect((int)thing.getX(), (int)thing.getY(), 10, 10);
       //for double buffer, when it is done printing everything
       //bufferGraphics.drawString (powerups.size() + "", 100, 100);
       g.drawImage(bf,0,0,this);
