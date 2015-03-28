@@ -2,9 +2,11 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+
 import java.applet.*;
 import java.awt.*;
 
+import java.awt.geom.Rectangle2D;
 import java.util.*;
 import java.awt.geom.Line2D;
 import java.awt.event.*;
@@ -29,56 +31,66 @@ public class PolyRacer extends Applet
     Point mouse = new Point(0, 0);
     ArrayList<Point> path = new ArrayList<Point>(), data = new ArrayList<Point>();
     Player player = null;
-   boolean right = false, left = false, up = false, down = false, scaled = false;
-   int framesPerSecond = 60, view = 0; double scaleAnimation = 1, score = 0;
+    boolean right = false, left = false, up = false, down = false, scaled = false;
+    int framesPerSecond = 60, view = 0;
+    double scaleAnimation = 1, score = 0;
 
-   long period = ((long)(1000/framesPerSecond))*1000000L;
-   Rectangle startButton;
+    long period = ((long) (1000 / framesPerSecond)) * 1000000L;
+    Rectangle startButton;
 
-   public Image getImage(String f)
-   {
-      Image img = null;
-      try
-      {
-         java.io.DataInputStream in =
-            new java.io.DataInputStream(
-            getClass().getResourceAsStream(f));
-         byte[] data = new byte[in.available()];
-         in.readFully(data);
-         in.close();
-         img = Toolkit.getDefaultToolkit().createImage(data);
-      }
-      catch(Exception e){img = getImage(getCodeBase(), f);}
-   
-      MediaTracker mt = new MediaTracker(this);
-      mt.addImage(img, 0);
-      try{mt.waitForID(0);}
-      catch(InterruptedException e){}
-   
-      return img;
-   }
+    public Image getImage(String f)
+    {
+        Image img = null;
+        try
+        {
+            java.io.DataInputStream in =
+                    new java.io.DataInputStream(
+                            getClass().getResourceAsStream(f));
+            byte[] data = new byte[in.available()];
+            in.readFully(data);
+            in.close();
+            img = Toolkit.getDefaultToolkit().createImage(data);
+        } catch(Exception e)
+        {
+            img = getImage(getCodeBase(), f);
+        }
 
-   public boolean saveScore(int score)
-   {
-       try {
-           HttpResponse<JsonNode> response = Unirest.post("https://tphummel-lru-cache.p.mashape.com/api/cache")
-                   .header("X-Mashape-Key", "OpLVYdsmHgmshpfFS0t3pLcAcM0dp1lquf1jsnN0CCFde9HqSx")
-                   .header("Content-Type", "application/json")
-                   .header("Accept", "application/json")
-                   .body("{'Score':" + score + "}")
-                   .asJson();
-           return true;
-       } catch (UnirestException e) {
-           e.printStackTrace();
-           return false;
-       }
-   }
+        MediaTracker mt = new MediaTracker(this);
+        mt.addImage(img, 0);
+        try
+        {
+            mt.waitForID(0);
+        } catch(InterruptedException e)
+        {
+        }
+
+        return img;
+    }
+
+    public boolean saveScore(int score)
+    {
+        try
+        {
+            HttpResponse<JsonNode> response = Unirest.post("https://tphummel-lru-cache.p.mashape.com/api/cache")
+                    .header("X-Mashape-Key", "OpLVYdsmHgmshpfFS0t3pLcAcM0dp1lquf1jsnN0CCFde9HqSx")
+                    .header("Content-Type", "application/json")
+                    .header("Accept", "application/json")
+                    .body("{'Score':" + score + "}")
+                    .asJson();
+            return true;
+        } catch(UnirestException e)
+        {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     public int loadScore()
     {
         String data;
         //Check health of data
-        try {
+        try
+        {
             HttpResponse<JsonNode> response = Unirest.get("https://tphummel-lru-cache.p.mashape.com/api/health")
                     .header("X-Mashape-Key", "OpLVYdsmHgmshpfFS0t3pLcAcM0dp1lquf1jsnN0CCFde9HqSx")
                     .header("Accept", "application/json")
@@ -88,7 +100,7 @@ public class PolyRacer extends Applet
 
             if(data.equals("OK"))
             {
-                 response = Unirest.get("https://tphummel-lru-cache.p.mashape.com/api/cache/4551a08f-6506-48f4-afe9-e6add1b3bab3")
+                response = Unirest.get("https://tphummel-lru-cache.p.mashape.com/api/cache/4551a08f-6506-48f4-afe9-e6add1b3bab3")
                         .header("X-Mashape-Key", "OpLVYdsmHgmshpfFS0t3pLcAcM0dp1lquf1jsnN0CCFde9HqSx")
                         .header("Accept", "application/json")
                         .asJson();
@@ -96,46 +108,48 @@ public class PolyRacer extends Applet
                 return Integer.valueOf(response.getBody().toString().split(":")[1].replace("}", ""));
             }
 
-        } catch (UnirestException e) {
+        } catch(UnirestException e)
+        {
             e.printStackTrace();
         }
-return 0;
+        return 0;
     }
-   
-   /**initializes applet
-	*/
-   public void init()
-   {
-      boolean dipp = false;
 
-      setSize(pWidth, pHeight);
-      setBackground(Color.black);
+    /**
+     * initializes applet
+     */
+    public void init()
+    {
+        boolean dipp = false;
 
-      dim = getSize(); 
-      bufferGraphics = bf.getGraphics();
+        setSize(pWidth, pHeight);
+        setBackground(Color.black);
 
-      addKeyListener(this);
-      addMouseListener(this);
-      addMouseMotionListener (this);
+        dim = getSize();
+        bufferGraphics = bf.getGraphics();
 
-      font = new Font ("Impact", Font.PLAIN, 20);
+        addKeyListener(this);
+        addMouseListener(this);
+        addMouseMotionListener(this);
 
-      startButton = new Rectangle(pWidth - 101, pHeight - 51, 100, 50);
-      dataMax = 50 + 70 + (pHeight/2) + 25;
-      dataMin = -70 + (pHeight/2) - 25;
-      for(int i = 0, j = 0; i < 10000; i++)
-      {
-         int switchVar = random.nextInt(50)+1;
+        font = new Font("Impact", Font.PLAIN, 20);
 
-         if(j%switchVar == 0)
-         {
-            dipp = random.nextBoolean();
-         }
+        startButton = new Rectangle(pWidth - 101, pHeight - 51, 100, 50);
+        dataMax = 50 + 70 + (pHeight / 2) + 25;
+        dataMin = -70 + (pHeight / 2) - 25;
+        for(int i = 0, j = 0; i < 10000; i++)
+        {
+            int switchVar = random.nextInt(50) + 1;
 
-         if(j==0)
-         {
-            j=1;
-         }
+            if(j % switchVar == 0)
+            {
+                dipp = random.nextBoolean();
+            }
+
+            if(j == 0)
+            {
+                j = 1;
+            }
             if(dipp)
             {
                 int randomValue = random.nextInt(50);
@@ -272,7 +286,7 @@ return 0;
                     data.set(i, new Point((int) (data.get(i).getX() * scaleAnimation), (int) ((data.get(i).getY() - (((double) dataMin) / ((double) pHeight / ((double) dataMax - (double) dataMin))) * scaleAnimation) * scaleAnimation)));
                 for(int j = 0; j < path.size(); j++)
                     path.set(j, new Point((int) (path.get(j).getX() * scaleAnimation), (int) ((path.get(j).getY() - (((double) dataMin) / ((double) pHeight / ((double) dataMax - (double) dataMin))) * scaleAnimation) * scaleAnimation)));
-                player.setRectangle(new Rectangle((int) (player.getX() * scaleAnimation), (int) ((player.getY() - (((double) dataMin) / ((double) pHeight / ((double) dataMax - (double) dataMin))) * scaleAnimation) * scaleAnimation),10, 20));
+                player.setRectangle(new Rectangle((int) (player.getX() * scaleAnimation), (int) ((player.getY() - (((double) dataMin) / ((double) pHeight / ((double) dataMax - (double) dataMin))) * scaleAnimation) * scaleAnimation), 10, 20));
                 scaled = true;
             }
             g2.setColor(Color.cyan);
@@ -284,8 +298,9 @@ return 0;
             {//prints all the dots
                 dot = dots.next();
                 //Point d = new Point((int) (dot.getX() * scaleAnimation), (int) ((dot.getY() - (((double) dataMin) / ((double) pHeight / ((double) dataMax - (double) dataMin))) * scaleAnimation) * scaleAnimation));
-                g2.fillRect((int) dot.getX(), (int) dot.getY(), 1, 1);
-                if(player.getRectangle().contains(dot))
+                if((dot.getX() > player.getX() - pWidth / 2 || dot.getX() < player.getX() + pWidth / 2) && (dot.getY() > player.getY() - pHeight / 2 || dot.getY() < player.getY() + pHeight / 2))
+                    g2.fillRect((int) (dot.getX() - player.getX() + pWidth/2), (int) (dot.getY() - player.getY() + pHeight/2), 1, 1);
+                if(player.getRectangle().contains(new Point((int) (dot.getX()), (int) (dot.getY()))))
                 {
                     dots.remove();
                     score++;
@@ -303,19 +318,22 @@ return 0;
                 else
                 {
                     next = it.next();
-                    Shape current = new Line2D.Double(previous.getX(), previous.getY(), next.getX(), next.getY());
-                    g2.draw(current);
-                    previous = next;
+                    //Shape current = new Line2D.Double(previous.getX()- player.getX() + pWidth/2, previous.getY() - player.getY() + pHeight/2, next.getX() - player.getX() + pWidth/2, next.getY() - player.getY() + pHeight/2);
+                    //g2.draw(current);
+                    //Shape current = new Line2D.Double(previous.getX()- player.getX() + pWidth/2, previous.getY() - player.getY() + pHeight/2, next.getX() - player.getX() + pWidth/2, next.getY() - player.getY() + pHeight/2);
+                    g2.draw(new Line2D.Double(previous.getX()- player.getX() + pWidth/2, previous.getY() - player.getY() + pHeight/2, next.getX() - player.getX() + pWidth/2, next.getY() - player.getY() + pHeight/2));
                     if(player != null)
-                        physics(current);
+                        physics(new Line2D.Double(previous.getX(), previous.getY() , next.getX(), next.getY()));//new Line2D.Double(previous.getX(), previous.getY(), next.getX(), next.getY()));
+                    previous = next;
                 }
-                g2.fillOval((int) previous.getX() - 5, (int) (previous.getY() - 5), 10, 10);
+                g2.fillOval((int) (previous.getX() - player.getX() + pWidth/2 - 5), (int) (previous.getY()- player.getY() + pHeight/2 - 5), 10, 10);
 
             }
             g2.setColor(Color.red);
-            g2.fillRect((int) (player.getX()), (int) (player.getY()), 10, 20);
+            g2.fillRect((int)(pWidth/2), (int)(pHeight/2), 10, 20);
             g2.drawString("X: " + player.getX() + " Y: " + player.getY(), 20, 40);
             g2.drawString("X: " + path.get(0).getX() + " Y: " + path.get(0).getY() + "  " + path.size(), 20, 60);
+            g2.drawString("X: " + path.get(1).getX() + " Y: " + path.get(1).getY() + "  " + path.size(), 20, 80);
 
         }
         //g2.draw(new Line2D.Double(0, dataMax, pWidth, dataMax));
@@ -327,14 +345,16 @@ return 0;
         g.drawImage(bf, 0, 0, this);
     }
 
-    public void physics(Shape current)
+    public void physics(Line2D current)
     {
-        if(player.getRectangle().intersectsLine((Line2D) current))
+        //System.out.println("X: " + player.getX() + " Y: " + player.getY());
+        //System.out.println("X: " + path.get(0).getX() + " Y: " + path.get(0).getY() + "  " + path.size());
+        if(player.getRectangle().intersectsLine(current))//player.getRectangle().intersectsLine((Line2D) current))
         {
             player.setVelocityY(3);
-            while(player.getRectangle().intersectsLine((Line2D) current))
-                player.setRectangle(new Rectangle((int)player.getX(), (int)(player.getY()-1), 10, 20));
-                player.setRectangle(new Rectangle((int)player.getX(), (int)(player.getY()+1), 10, 20));
+            while(player.getRectangle().intersectsLine(current))
+                player.setRectangle(new Rectangle((int) player.getX(), (int) (player.getY() - 1), 10, 20));
+            player.setRectangle(new Rectangle((int) player.getX(), (int) (player.getY() + 1), 10, 20));
         }
         else
             player.setVelocityY(-1);
