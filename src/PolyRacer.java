@@ -26,7 +26,7 @@ public class PolyRacer extends Applet
    Dimension dim;
    private static final int NO_DELAYS_PER_YIELD = 16;
    private static int MAX_FRAME_SKIPS = 5;
-   static int pWidth = 1200, pHeight = 800, dataMax = 200, dataMin = 150;
+   static int pWidth = 1200, pHeight = 800, dataMax = 0, dataMin = 0;
    Graphics bufferGraphics; 
    BufferedImage bf = new BufferedImage (pWidth, pHeight,BufferedImage.TYPE_INT_RGB);
    Point mouse = new Point(0, 0), thing = new Point(50, 50);
@@ -81,8 +81,8 @@ ArrayList<Point> path = new ArrayList<Point>();
       font = new Font ("Impact", Font.PLAIN, 20);
 
       startButton = new Rectangle(pWidth - 101, pHeight - 51, 100, 50);
-      dataMax = 50 + 70 + (pHeight/2) + 50;
-      dataMin = -70 + pHeight/2-50;
+      dataMax = 50 + 70 + (pHeight/2) + 25;
+      dataMin = -70 + (pHeight/2) - 25;
       for(int i = 0, j = 0; i < 10000; i++)
       {
          int switchVar = random.nextInt(50)+1;
@@ -104,12 +104,12 @@ ArrayList<Point> path = new ArrayList<Point>();
 
 
             //Main dipped dots
-            data[i] = new Point((int)((double)(pWidth)/10000*i), randomValue + pHeight/2+50);
+            data[i] = new Point((int)((double)(pWidth)/10000*i), randomValue + pHeight/2+25);
 
             if(i < 99999)
             {
                //Random Extra dots
-               data[++i] = new Point((int)((double)(pWidth)/10000*i), randomValue + randomOffset + pHeight/2+50);
+               data[++i] = new Point((int)((double)(pWidth)/10000*i), randomValue + randomOffset + pHeight/2+25);
             }
 
          }
@@ -118,12 +118,12 @@ ArrayList<Point> path = new ArrayList<Point>();
             int randomValue = random.nextInt(50);
             int randomOffset = random.nextInt(70);
 
-            data[i] = new Point((int)((double)(pWidth)/10000*i), randomValue + pHeight/2 -50);
+            data[i] = new Point((int)((double)(pWidth)/10000*i), randomValue + pHeight/2 -25);
 
             if(i < 99999)
             {
                //Random Extra dots
-               data[++i] = new Point((int)((double)(pWidth)/10000*i), randomValue - randomOffset + pHeight/2-50);
+               data[++i] = new Point((int)((double)(pWidth)/10000*i), randomValue - randomOffset + pHeight/2-25);
             }
 
          }
@@ -162,7 +162,7 @@ ArrayList<Point> path = new ArrayList<Point>();
             bufferGraphics = bf.getGraphics();
       }
        Graphics2D g2 = (Graphics2D) bufferGraphics;
-      g2.setFont (font);
+      g2.setFont(font);
 
       g2.setColor(Color.black);
       g2.fillRect(0, 0, pWidth, pHeight);
@@ -188,15 +188,17 @@ ArrayList<Point> path = new ArrayList<Point>();
        }
        else if(view == 1)
        {
-           if(scaleAnimation<pHeight/(dataMax-dataMin))
+           if(scaleAnimation<(double)pHeight/(double)(dataMax-dataMin))
            scaleAnimation+=0.01;
-           else if(scaleAnimation>pHeight/(dataMax-dataMin))
-               scaleAnimation = pHeight/(dataMax-dataMin);
+           else if(scaleAnimation>(double)pHeight/(double)(dataMax-dataMin))
+               scaleAnimation = (double)pHeight/(double)(dataMax-dataMin);
            g2.setColor(Color.white);
            for (int i = 0; i < 10000; i++)
+               //g2.drawRect((int) (data[i].getX()*scaleAnimation), (int) ((data[i].getY() - dataMin)*scaleAnimation), 1, 1);
                g2.drawRect((int) (data[i].getX()*scaleAnimation), (int) ((data[i].getY() - (((double)dataMin)/((double)pHeight/((double)dataMax-(double)dataMin)))*scaleAnimation    )*scaleAnimation), 1, 1);
        }
-
+      g2.draw(new Line2D.Double(0, dataMax, pWidth, dataMax));
+      g2.draw(new Line2D.Double(0, dataMin, pWidth, dataMin));
       g2.fillRect((int)mouse.getX(), (int)mouse.getY(), 10, 10);
       g2.fillRect((int)thing.getX(), (int)thing.getY(), 10, 10);
       //for double buffer, when it is done printing everything
