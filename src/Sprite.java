@@ -1,17 +1,19 @@
-import javax.swing.*;
 import java.awt.*;
 
 /**
- * Created by mlh on 3/28/2015.
+ * Created by Gurpreet Singh on 3/28/2015.
  */
 public class Sprite
 {
 
-    private Image image;
-    private Rectangle rectangle;
-    private String name;
-    private int jumpTimer;
-    private int jumpPower;
+    private Image image;                        //The image of the object
+    private Rectangle rectangle;                //Create a rectangle
+    private String name;                        //Name of the sprite
+    private int jumpTimer;                      //Used with jump power
+    private int jumpPower;                      //How high you jump
+    private boolean facingRight;                //Indicates if you are facing right
+    private double velocityX;                    //Positive velocity takes you to the right side, negative velocity takes you to the left side
+    private double velocityY;                    //Positive velocity takes you UP, negative velocity takes you DOWN
 
     public Sprite(Image image, Rectangle rectangle, String name, int jumptimer, int jumpPower)
     {
@@ -60,5 +62,29 @@ public class Sprite
 
     public void setJumpPower(int jumpPower) {
         this.jumpPower = jumpPower;
+    }
+
+    public boolean isFacingRight() {
+        return facingRight;
+    }
+
+    public void setFacingRight(boolean facingRight) {
+        this.facingRight = facingRight;
+    }
+
+    public double getVelocityX() {
+        return velocityX;
+    }
+
+    public void setVelocityX(double velocityX) {
+        this.velocityX = velocityX;
+    }
+
+    public double getVelocityY() {
+        return velocityY;
+    }
+
+    public void setVelocityY(double velocityY) {
+        this.velocityY = velocityY;
     }
 }//End of sprite class
