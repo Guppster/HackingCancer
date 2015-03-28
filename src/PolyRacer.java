@@ -31,7 +31,7 @@ public class PolyRacer extends Applet
    BufferedImage bf = new BufferedImage (pWidth, pHeight,BufferedImage.TYPE_INT_RGB);
    Point mouse = new Point(0, 0);
    ArrayList<Point> path = new ArrayList<Point>(), data = new ArrayList<Point>();
-    Sprite player = null;
+    Player player = null;
    boolean right = false, left = false, up = false, down = false;
    int framesPerSecond = 60, view = 0; double scaleAnimation = 1, score = 0;
 
@@ -166,14 +166,14 @@ public class PolyRacer extends Applet
       g2.setColor(Color.black);
       g2.fillRect(0, 0, pWidth, pHeight);
        double yy = (((double)dataMin)/((double)pHeight/((double)dataMax-(double)dataMin)))*scaleAnimation;
-       if(view == 0) {
+       if(view == 0) {//SETTING PATH
            g2.setColor(Color.white);
            for (int i = 0; i < 10000; i++)
                 g2.drawRect((int) data.get(i).getX(), (int) data.get(i).getY(), 1, 1);
            g2.setColor(Color.green);
            Point previous = null, next = null;
            Iterator<Point> it = path.iterator();
-           while(it.hasNext())
+           while(it.hasNext())//prints path
            {
                if(previous == null)
                    previous = it.next();
@@ -187,7 +187,7 @@ public class PolyRacer extends Applet
            }
            drawButton(g2);
        }
-       else if(view == 1) {
+       else if(view == 1) {//ZOOMING IN ON GAME
            if (scaleAnimation < (double) pHeight / (double) (dataMax - dataMin))
                scaleAnimation += 0.01;
            else if (scaleAnimation > (double) pHeight / (double) (dataMax - dataMin)) {
@@ -212,13 +212,13 @@ public class PolyRacer extends Applet
                g2.fillOval((int) (previous.getX() * scaleAnimation) - 5, (int) ((previous.getY() - yy) * scaleAnimation) - 5, 10, 10);
            }
        }
-           else if(view == 2) {
+           else if(view == 2) {//PLAYING GAME
            g2.setColor(Color.cyan);
            g2.drawString("Score: " + score, 10, 10);
            g2.setColor(Color.white);
            Iterator<Point> dots = data.iterator();
            Point dot;
-           while (dots.hasNext()) {
+           while (dots.hasNext()) {//prints all the dots
                dot = dots.next();
                Point d = new Point((int) (dot.getX() * scaleAnimation), (int) ((dot.getY() - (((double) dataMin) / ((double) pHeight / ((double) dataMax - (double) dataMin))) * scaleAnimation) * scaleAnimation));
                g2.fillRect((int)d.getX(), (int)d.getY(), 1, 1);
@@ -232,7 +232,7 @@ public class PolyRacer extends Applet
            g2.setColor(Color.green);
            Point previous = null, next = null;
            Iterator<Point> it = path.iterator();
-           while (it.hasNext()) {
+           while (it.hasNext()) {//prints the line/land
                if (previous == null)
                    previous = it.next();
                else {
@@ -242,19 +242,13 @@ public class PolyRacer extends Applet
                    previous = next;
                    if(player != null)
                         physics(current);
-
-
-
-
-
-
-
-
-
                }
                g2.fillOval((int) (previous.getX() * scaleAnimation) - 5, (int) ((previous.getY() - yy) * scaleAnimation) - 5, 10, 10);
-               player.print(g2);
            }
+           g2.setColor(Color.red);
+           g2.fillRect((int)(player.getRectangle().getX() * scaleAnimation), (int) ((player.getRectangle().getY() - yy) * scaleAnimation), 10, 20);
+           //System.out.println(view);
+
        }
       //g2.draw(new Line2D.Double(0, dataMax, pWidth, dataMax));
       //g2.draw(new Line2D.Double(0, dataMin, pWidth, dataMin));
@@ -267,23 +261,27 @@ public class PolyRacer extends Applet
 
     public void physics(Shape current)
     {
-        if(player.getRect().intersectsLine((Line2D) current))
-            player.setYVelocity(1);
+        if(player.getRectangle().intersectsLine((Line2D) current))
+            player.setVelocityY(1);
         else
-            player.setYVelocity(-3);
+            player.setVelocityY(-3);
     }
 
    public void gameUpdate()
    {
-      if(left)
-         player.setXVelocity(-1);
-      if(right)
-          player.setXVelocity(1);
-      if(up)
-          player.setYVelocity(1);
-      if(down)
-          player.setYVelocity(-1);
-    player.update();
+       if(player != null) {
+           if (left)
+               player.setVelocityX(-1);
+           else if (right)
+               player.setVelocityX(1);
+           else if (player.getVelocityX() != 0)
+               player.setVelocityX(0);
+           if (up)
+               player.setVelocityY(1);
+           else if (player.getVelocityY() != 0)
+               player.setVelocityY(0);
+           player.update();
+       }
    }
    
    /**Main thread that is started at the start of the program and calls everything to make the game smooth
@@ -339,13 +337,20 @@ public class PolyRacer extends Applet
    public void mouseClicked (MouseEvent e)
    {
        Point m = new Point(e.getX(), e.getY());
-       if(startButton.contains(m))
+       if(startButton.contains(m) && path.size() > 0) {
+
            view = 1;
-       if(view == 0)
+       }
+       else if(view == 0)
        {
            path.add(m);
-           if(player == null)
-                player = new Sprite((int)m.getX(), (int)m.getY()-20, 10, 20);
+           if(player == null) {
+               double yy = (((double)dataMin)/((double)pHeight/((double)dataMax-(double)dataMin)))*scaleAnimation;
+               player = new Player(new Rectangle((int) (m.getX() * scaleAnimation), (int) ((m.getY() - 20) * scaleAnimation), 10, 20));
+               //player.setRectangle(new Rectangle((int)(player.getRectangle().getX() * scaleAnimation), (int) ((player.getRectangle().getY() - 20) * scaleAnimation), 10, 20));
+           System.out.println("playerx: "+(int) (m.getX() * scaleAnimation) + "playery: "+(int) ((m.getY() - yy) * scaleAnimation));
+           System.out.println("playerx: "+e.getX() * scaleAnimation  + "playery: "+(e.getY() - yy) * scaleAnimation);
+           }
        }
    }
    public void mouseDragged (MouseEvent e)
