@@ -24,17 +24,19 @@ public class PolyRacer extends Applet
    Dimension dim;
    private static final int NO_DELAYS_PER_YIELD = 16;
    private static int MAX_FRAME_SKIPS = 5;
-   static int pWidth = 600, pHeight = 400;
+   static int pWidth = 600, pHeight = 400, dataMax = 200, dataMin = 150;
    Graphics bufferGraphics; 
    BufferedImage bf = new BufferedImage (pWidth, pHeight,BufferedImage.TYPE_INT_RGB);
-   int menu = 0;
    Point mouse = new Point(0, 0), thing = new Point(50, 50);
-   Image mainMenu, highscores, extras;
-   boolean right = false, left = false, up = false, down = false, play = false, limbo = false, textBoxRunning = false;
-   int framesPerSecond = 60;
+
+   boolean right = false, left = false, up = false, down = false;
+   int framesPerSecond = 60, view = 0;
+          double scaleAnimation = 1;
    Point[] data = new Point[10000];
+
    long period = ((long)(1000/framesPerSecond))*1000000L;
-   
+   Rectangle startButton;
+
    public Image getImage(String f)
    {
       Image img = null;
@@ -63,8 +65,6 @@ public class PolyRacer extends Applet
    public void init()
    {
       boolean dipp = false;
-      int dataMin;
-      int dataMax;
 
       setSize(pWidth, pHeight);
       setBackground(Color.black);
@@ -77,6 +77,8 @@ public class PolyRacer extends Applet
       addMouseMotionListener (this);
 
       font = new Font ("Impact", Font.PLAIN, 20);
+
+       startButton = new Rectangle(pWidth - 101, pHeight - 51, 100, 50);
 
       for(int i = 0, j = 0; i < 10000; i++)
       {
@@ -112,14 +114,14 @@ public class PolyRacer extends Applet
          {
             int randomValue = random.nextInt(50);
             int randomOffset = random.nextInt(70);
-            dataMax = randomValue - randomOffset + 200;
+            dataMin = randomValue - randomOffset + 200;
             
             data[i] = new Point((int)(600.0/10000*i), randomValue + 150);
 
             if(i < 99999)
             {
                //Random Extra dots
-               data[++i] = new Point((int)(600.0/10000*i), dataMax);
+               data[++i] = new Point((int)(600.0/10000*i), dataMin);
             }
 
          }
@@ -129,6 +131,12 @@ public class PolyRacer extends Applet
       start();//starts main thread
    }
 
+    public void drawButton(Graphics2D g)
+    {
+        g.setColor(Color.red);
+        g.drawRect((int)startButton.getX(), (int)startButton.getY(), (int)startButton.getWidth(), (int)startButton.getHeight());
+    }
+
    /**when something changes it calls this to update the screen
 	*@param g used to print graphics
 	*/
@@ -137,23 +145,6 @@ public class PolyRacer extends Applet
       paint(g);
    }
 
-         /**draws the ground
-	*@param g used to print graphics
-	*@param c the colour to print the ground
-	*/
-   public void drawGround (Graphics g, Color c)
-   {
-      Graphics2D g2 = (Graphics2D)g.create();//for printing gradients
-      g2.setColor(c);
-      int [] groundX = {0, 600, 600, 0};//creates gradient that goes from light grey to the colour passed in the parameter
-      GradientPaint gradient = new GradientPaint(0,200,Color.lightGray,0,0,c,true);//light grey to make the fading effect
-      g2.setPaint(gradient);
-      int [] groundY = {5, 5};//(int)(195-(((la+(ra*(-1)))*2.8)*320)), (int)(195+(((la+(ra*(-1)))*2.8)*320)), 400, 400};//calculate x/y values
-      Polygon ground = new Polygon(groundX, groundY, 4);
-      g2.fillPolygon(ground);//prints the polygon
-      //}
-   }
-   
    /**This method is used to print everything to the screen
 	*@param g used to print graphics
 	*/
@@ -173,10 +164,23 @@ public class PolyRacer extends Applet
 
       g2.setColor(Color.black);
       g2.fillRect(0, 0, 600, 400);
-      g2.setColor(Color.white);
-      for(int i = 0; i < 10000; i++)
-          g2.drawRect((int)data[i].getX(), (int)data[i].getY(), 1, 1);
-   
+       if(view == 0) {
+           g2.setColor(Color.white);
+           for (int i = 0; i < 10000; i++)
+               g2.drawRect((int) data[i].getX(), (int) data[i].getY(), 1, 1);
+           drawButton(g2);
+       }
+       else if(view == 1)
+       {
+           if(scaleAnimation<pHeight/(dataMax-dataMin))
+           scaleAnimation+=0.01;
+           else if(scaleAnimation>pHeight/(dataMax-dataMin))
+               scaleAnimation = pHeight/(dataMax-dataMin);
+           g2.setColor(Color.white);
+           for (int i = 0; i < 10000; i++)
+               g2.drawRect((int) (data[i].getX()*scaleAnimation), (int) ((data[i].getY() - (((double)dataMin)/((double)pHeight/((double)dataMax-(double)dataMin)))*scaleAnimation    )*scaleAnimation), 1, 1);
+       }
+
       g2.fillRect((int)mouse.getX(), (int)mouse.getY(), 10, 10);
       g2.fillRect((int)thing.getX(), (int)thing.getY(), 10, 10);
       //for double buffer, when it is done printing everything
@@ -206,9 +210,9 @@ public class PolyRacer extends Applet
       long excess = 0L;
       while (true)
       {
-         beforeTime = System.nanoTime();
          gameUpdate(); 
          repaint();
+          beforeTime = System.nanoTime();
          afterTime = System.nanoTime();
          timeDiff = afterTime - beforeTime;
          sleepTime = (period - timeDiff) - overSleepTime;  
@@ -242,12 +246,16 @@ public class PolyRacer extends Applet
 	*/
    public void mouseEntered (MouseEvent e)
    {
-      requestFocusInWindow(); 
+      requestFocusInWindow();
    }
    public void mouseExited (MouseEvent e)
    {}
    public void mouseClicked (MouseEvent e)
-   {}
+   {
+       Point m = new Point(e.getX(), e.getY());
+       if(startButton.contains(m))
+           view = 1;
+   }
    public void mouseDragged (MouseEvent e)
    {}
    /**changes the cursor to the hand when you can click on a button
@@ -256,7 +264,10 @@ public class PolyRacer extends Applet
    public void mouseMoved (MouseEvent e)
    {
       mouse.setLocation(e.getX(), e.getY());
-      
+       if(startButton.contains(mouse))
+           setCursor(new Cursor(Cursor.HAND_CURSOR));
+       else if(!(getCursor().equals(Cursor.CROSSHAIR_CURSOR)))
+           setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
    }
    /**used for main menu to check when they click buttons
 	*@param e contains mouse position
