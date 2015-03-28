@@ -24,7 +24,7 @@ public class PolyRacer extends Applet
    Dimension dim;
    private static final int NO_DELAYS_PER_YIELD = 16;
    private static int MAX_FRAME_SKIPS = 5;
-   static int pWidth = 600, pHeight = 400, dataMax = 200, dataMin = 150;
+   static int pWidth = 600, pHeight = 400, dataMax = 200, dataMin = 150, x = 0;
    Graphics bufferGraphics; 
    BufferedImage bf = new BufferedImage (pWidth, pHeight,BufferedImage.TYPE_INT_RGB);
    Point mouse = new Point(0, 0), thing = new Point(50, 50);
@@ -79,7 +79,8 @@ public class PolyRacer extends Applet
       font = new Font ("Impact", Font.PLAIN, 20);
 
        startButton = new Rectangle(pWidth - 101, pHeight - 51, 100, 50);
-
+      dataMax = 50 + 70 + 200;
+      dataMin = 130;
       for(int i = 0, j = 0; i < 10000; i++)
       {
          int switchVar = random.nextInt(25)+1;
@@ -98,7 +99,7 @@ public class PolyRacer extends Applet
          {
             int randomValue = random.nextInt(50);
             int randomOffset = random.nextInt(70);
-            dataMax = randomValue + randomOffset + 200;
+            x = randomValue + randomOffset + 200;
 
             //Main dipped dots
             data[i] = new Point((int)(600.0/10000*i), randomValue + 200);
@@ -106,7 +107,12 @@ public class PolyRacer extends Applet
             if(i < 99999)
             {
                //Random Extra dots
-               data[++i] = new Point((int)(600.0/10000*i), dataMax);
+               data[++i] = new Point((int)(600.0/10000*i), x);
+            }
+
+            if(x > dataMax)
+            {
+               dataMax = x;
             }
 
          }
@@ -114,14 +120,19 @@ public class PolyRacer extends Applet
          {
             int randomValue = random.nextInt(50);
             int randomOffset = random.nextInt(70);
-            dataMin = randomValue - randomOffset + 200;
+            x = randomValue - randomOffset + 200;
             
             data[i] = new Point((int)(600.0/10000*i), randomValue + 150);
 
             if(i < 99999)
             {
                //Random Extra dots
-               data[++i] = new Point((int)(600.0/10000*i), dataMin);
+               data[++i] = new Point((int)(600.0/10000*i), x);
+            }
+
+            if(x < dataMin)
+            {
+               dataMin = x;
             }
 
          }
