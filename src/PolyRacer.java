@@ -62,18 +62,25 @@ public class PolyRacer extends Applet
 	*/
    public void init()
    {
+      int dataMin;
+      int dataMax;
       boolean dipp = false;
+
       setSize(pWidth, pHeight);
       setBackground(Color.black);
+
       dim = getSize(); 
-      bufferGraphics = bf.getGraphics(); 
+      bufferGraphics = bf.getGraphics();
+
       addKeyListener(this);
       addMouseListener(this);
       addMouseMotionListener (this);
+
       font = new Font ("Impact", Font.PLAIN, 20);
+
       for(int i = 0, j = 0; i < 10000; i++)
       {
-         int switchVar = random.nextInt(25)+1;
+         int switchVar = random.nextInt(70)+1;
 
          if(j%switchVar == 0)
          {
@@ -88,26 +95,31 @@ public class PolyRacer extends Applet
          if(dipp)
          {
             int randomValue = random.nextInt(50);
+            int randomOffset = random.nextInt(70);
+            dataMin = randomValue + randomOffset + 200;
+
             //Main dipped dots
             data[i] = new Point((int)(600.0/10000*i), randomValue + 200);
 
             if(i < 99999)
             {
                //Random Extra dots
-               data[++i] = new Point((int)(600.0/10000*i), randomValue + random.nextInt(70) + 200);
+               data[++i] = new Point((int)(600.0/10000*i), dataMin);
             }
 
          }
          else
          {
-
             int randomValue = random.nextInt(50);
+            int randomOffset = random.nextInt(70);
+            dataMax = randomValue - randomOffset + 200;
+
             data[i] = new Point((int)(600.0/10000*i), randomValue + 150);
 
             if(i < 99999)
             {
                //Random Extra dots
-               data[++i] = new Point((int)(600.0/10000*i), randomValue - random.nextInt(70) + 200);
+               data[++i] = new Point((int)(600.0/10000*i), dataMax);
             }
 
          }
