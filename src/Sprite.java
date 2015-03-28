@@ -14,6 +14,7 @@ public class Sprite
     private boolean facingRight;                //Indicates if you are facing right
     private double velocityX;                    //Positive velocity takes you to the right side, negative velocity takes you to the left side
     private double velocityY;                    //Positive velocity takes you UP, negative velocity takes you DOWN
+    private double x, y;
 
     public Sprite(Image image, Rectangle rectangle, String name, int jumptimer, int jumpPower)
     {
@@ -34,11 +35,13 @@ public class Sprite
     }
 
     public Rectangle getRectangle() {
-        return rectangle;
+        return new Rectangle((int)x, (int)y, (int)rectangle.getWidth(), (int)rectangle.getHeight());
     }
 
     public void setRectangle(Rectangle rectangle) {
         this.rectangle = rectangle;
+        x = rectangle.getX();
+        y = rectangle.getY();
     }
 
     public String getName() {
@@ -76,7 +79,18 @@ public class Sprite
     public double getVelocityX() {
         return velocityX;
     }
-
+    public double getX() {
+        return x;
+    }
+    public double getY() {
+        return y;
+    }
+    public void setX(double x) {
+        this.x = x;
+    }
+    public void setY(double y) {
+        this.y = y;
+    }
     public void setVelocityX(double velocityX) {
         this.velocityX = velocityX;
     }
@@ -91,5 +105,7 @@ public class Sprite
     public void update() {
 
         rectangle.translate((int) velocityX, (int) velocityY * (-1));
+        x+=velocityX;
+        y-=velocityY;
     }
 }//End of sprite class
