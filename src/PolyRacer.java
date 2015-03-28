@@ -1,15 +1,10 @@
-/*	Copyright (c) 2013, Micros. All rights reserved.
-*	Redistribution and use in source and binary forms, 
-*	with or without modification, are not permitted.
-*/
-/**
- *@author Konrad Pfundner
- */
-
-import javafx.scene.shape.Circle;
-
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import java.applet.*;
 import java.awt.*;
+
 import java.util.*;
 import java.awt.geom.Line2D;
 import java.awt.event.*;
@@ -34,78 +29,113 @@ public class PolyRacer extends Applet
     Point mouse = new Point(0, 0);
     ArrayList<Point> path = new ArrayList<Point>(), data = new ArrayList<Point>();
     Player player = null;
-    boolean right = false, left = false, up = false, down = false, scaled = false;
-    int framesPerSecond = 60, view = 0;
-    double scaleAnimation = 1, score = 0;
+   boolean right = false, left = false, up = false, down = false, scaled = false;
+   int framesPerSecond = 60, view = 0; double scaleAnimation = 1, score = 0;
 
-    long period = ((long) (1000 / framesPerSecond)) * 1000000L;
-    Rectangle startButton;
+   long period = ((long)(1000/framesPerSecond))*1000000L;
+   Rectangle startButton;
 
-    public Image getImage(String f)
+   public Image getImage(String f)
+   {
+      Image img = null;
+      try
+      {
+         java.io.DataInputStream in =
+            new java.io.DataInputStream(
+            getClass().getResourceAsStream(f));
+         byte[] data = new byte[in.available()];
+         in.readFully(data);
+         in.close();
+         img = Toolkit.getDefaultToolkit().createImage(data);
+      }
+      catch(Exception e){img = getImage(getCodeBase(), f);}
+   
+      MediaTracker mt = new MediaTracker(this);
+      mt.addImage(img, 0);
+      try{mt.waitForID(0);}
+      catch(InterruptedException e){}
+   
+      return img;
+   }
+
+   public boolean saveScore(int score)
+   {
+       try {
+           HttpResponse<JsonNode> response = Unirest.post("https://tphummel-lru-cache.p.mashape.com/api/cache")
+                   .header("X-Mashape-Key", "OpLVYdsmHgmshpfFS0t3pLcAcM0dp1lquf1jsnN0CCFde9HqSx")
+                   .header("Content-Type", "application/json")
+                   .header("Accept", "application/json")
+                   .body("{'Score':" + score + "}")
+                   .asJson();
+           return true;
+       } catch (UnirestException e) {
+           e.printStackTrace();
+           return false;
+       }
+   }
+
+    public int loadScore()
     {
-        Image img = null;
-        try
-        {
-            java.io.DataInputStream in =
-                    new java.io.DataInputStream(
-                            getClass().getResourceAsStream(f));
-            byte[] data = new byte[in.available()];
-            in.readFully(data);
-            in.close();
-            img = Toolkit.getDefaultToolkit().createImage(data);
-        } catch(Exception e)
-        {
-            img = getImage(getCodeBase(), f);
-        }
+        String data;
+        //Check health of data
+        try {
+            HttpResponse<JsonNode> response = Unirest.get("https://tphummel-lru-cache.p.mashape.com/api/health")
+                    .header("X-Mashape-Key", "OpLVYdsmHgmshpfFS0t3pLcAcM0dp1lquf1jsnN0CCFde9HqSx")
+                    .header("Accept", "application/json")
+                    .asJson();
 
-        MediaTracker mt = new MediaTracker(this);
-        mt.addImage(img, 0);
-        try
-        {
-            mt.waitForID(0);
-        } catch(InterruptedException e)
-        {
-        }
+            data = response.getBody().toString().split(":")[1].replace(" ", "").replace("\"", "");
 
-        return img;
+            if(data.equals("OK"))
+            {
+                 response = Unirest.get("https://tphummel-lru-cache.p.mashape.com/api/cache/4551a08f-6506-48f4-afe9-e6add1b3bab3")
+                        .header("X-Mashape-Key", "OpLVYdsmHgmshpfFS0t3pLcAcM0dp1lquf1jsnN0CCFde9HqSx")
+                        .header("Accept", "application/json")
+                        .asJson();
+
+                return Integer.valueOf(response.getBody().toString().split(":")[1].replace("}", ""));
+            }
+
+        } catch (UnirestException e) {
+            e.printStackTrace();
+        }
+return 0;
     }
+   
+   /**initializes applet
+	*/
+   public void init()
+   {
+      boolean dipp = false;
 
-    /**
-     * initializes applet
-     */
-    public void init()
-    {
-        boolean dipp = false;
+      setSize(pWidth, pHeight);
+      setBackground(Color.black);
 
-        setSize(pWidth, pHeight);
-        setBackground(Color.black);
+      dim = getSize(); 
+      bufferGraphics = bf.getGraphics();
 
-        dim = getSize();
-        bufferGraphics = bf.getGraphics();
+      addKeyListener(this);
+      addMouseListener(this);
+      addMouseMotionListener (this);
 
-        addKeyListener(this);
-        addMouseListener(this);
-        addMouseMotionListener(this);
+      font = new Font ("Impact", Font.PLAIN, 20);
 
-        font = new Font("Impact", Font.PLAIN, 20);
+      startButton = new Rectangle(pWidth - 101, pHeight - 51, 100, 50);
+      dataMax = 50 + 70 + (pHeight/2) + 25;
+      dataMin = -70 + (pHeight/2) - 25;
+      for(int i = 0, j = 0; i < 10000; i++)
+      {
+         int switchVar = random.nextInt(50)+1;
 
-        startButton = new Rectangle(pWidth - 101, pHeight - 51, 100, 50);
-        dataMax = 50 + 70 + (pHeight / 2) + 25;
-        dataMin = -70 + (pHeight / 2) - 25;
-        for(int i = 0, j = 0; i < 10000; i++)
-        {
-            int switchVar = random.nextInt(50) + 1;
+         if(j%switchVar == 0)
+         {
+            dipp = random.nextBoolean();
+         }
 
-            if(j % switchVar == 0)
-            {
-                dipp = random.nextBoolean();
-            }
-
-            if(j == 0)
-            {
-                j = 1;
-            }
-
+         if(j==0)
+         {
+            j=1;
+         }
             if(dipp)
             {
                 int randomValue = random.nextInt(50);
