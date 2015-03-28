@@ -5,6 +5,8 @@
 /**
 *@author Konrad Pfundner
 	*/
+import javafx.scene.shape.Circle;
+
 import java.applet.*;
 import java.awt.*;
 import java.util.*;
@@ -28,7 +30,7 @@ public class PolyRacer extends Applet
    Graphics bufferGraphics; 
    BufferedImage bf = new BufferedImage (pWidth, pHeight,BufferedImage.TYPE_INT_RGB);
    Point mouse = new Point(0, 0), thing = new Point(50, 50);
-
+ArrayList<Point> path = new ArrayList<Point>();
    boolean right = false, left = false, up = false, down = false;
    int framesPerSecond = 60, view = 0;
           double scaleAnimation = 1;
@@ -79,7 +81,8 @@ public class PolyRacer extends Applet
       font = new Font ("Impact", Font.PLAIN, 20);
 
        startButton = new Rectangle(pWidth - 101, pHeight - 51, 100, 50);
-
+       dataMax = 50 + 70 + 200;
+       dataMin = 0 - 70 + 200;
       for(int i = 0, j = 0; i < 10000; i++)
       {
          int switchVar = random.nextInt(25)+1;
@@ -98,7 +101,6 @@ public class PolyRacer extends Applet
          {
             int randomValue = random.nextInt(50);
             int randomOffset = random.nextInt(70);
-            dataMax = randomValue + randomOffset + 200;
 
             //Main dipped dots
             data[i] = new Point((int)(600.0/10000*i), randomValue + 200);
@@ -114,7 +116,6 @@ public class PolyRacer extends Applet
          {
             int randomValue = random.nextInt(50);
             int randomOffset = random.nextInt(70);
-            dataMin = randomValue - randomOffset + 200;
             
             data[i] = new Point((int)(600.0/10000*i), randomValue + 150);
 
@@ -169,6 +170,20 @@ public class PolyRacer extends Applet
            for (int i = 0; i < 10000; i++)
                g2.drawRect((int) data[i].getX(), (int) data[i].getY(), 1, 1);
            drawButton(g2);
+           Point previous = null, next = null;
+           Iterator<Point> it = path.iterator();
+           while(it.hasNext())
+           {
+               if(previous == null)
+               previous = it.next();
+               else
+               {
+                   next = it.next();
+                   g2.draw(new Line2D.Double(previous.getX(), previous.getY(), next.getX(), next.getY()));
+                   previous = next;
+               }
+               g2.fillOval((int) previous.getX()-5, (int)previous.getY()-5, 10, 10);
+           }
        }
        else if(view == 1)
        {
@@ -255,6 +270,10 @@ public class PolyRacer extends Applet
        Point m = new Point(e.getX(), e.getY());
        if(startButton.contains(m))
            view = 1;
+       if(view == 0)
+       {
+           path.add(m);
+       }
    }
    public void mouseDragged (MouseEvent e)
    {}
