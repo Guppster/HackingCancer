@@ -1,8 +1,5 @@
 import java.awt.*;
 
-/**
- * Created by Gurpreet Singh on 3/28/2015.
- */
 public class Monster extends Sprite
 {
     //The monster's height should be a little bit smaller than the player's height.
@@ -30,7 +27,8 @@ public class Monster extends Sprite
         //Use players direction and velocity to determine the next move of the AI monster
 
         //If Monster is on the right side of Player
-        if(playerX < monsterX)
+        if(monsterX - playerX > 100){}
+        else if(playerX < monsterX)
         {
             if(player.isFacingRight() && playerVelocity > 0)
             {
