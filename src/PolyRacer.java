@@ -5,8 +5,6 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 
 import java.applet.*;
 import java.awt.*;
-
-import java.awt.geom.Rectangle2D;
 import java.util.*;
 import java.awt.geom.Line2D;
 import java.awt.event.*;
@@ -20,7 +18,7 @@ public class PolyRacer extends Applet
      */
     private static final long serialVersionUID = 1L;
     static Random random = new Random();//used to create random numbers
-    Thread th, l, s;//threads
+    Thread th;
     Font font;
     Dimension dim;
     private static final int NO_DELAYS_PER_YIELD = 16;
@@ -32,13 +30,13 @@ public class PolyRacer extends Applet
     ArrayList<Point> path = new ArrayList<Point>(), data = new ArrayList<Point>();
     ArrayList<Monster> mobs = new ArrayList<Monster>();
     Player player = null;
-    Image outro, intro;
+    Image outro, intro, instructPage;
     boolean right = false, left = false, up = false, down = false, scaled = false;
     int framesPerSecond = 60, view = 3;
     double scaleAnimation = 1, score = 0;
 
     long period = ((long) (1000 / framesPerSecond)) * 1000000L;
-    Rectangle startButton, play, instructions, playAgain;
+    Rectangle startButton, play, instructions, playAgain, back;
 
     public Image getImage(String f)
     {
@@ -140,6 +138,7 @@ public class PolyRacer extends Applet
         play = new Rectangle(120, 410, 130, 40);
         playAgain = new Rectangle(90, 400, 130, 40);
         instructions = new Rectangle(740, 410, 130, 40);
+        back = new Rectangle(750, 510, 130, 40);
 
         getData();
 
@@ -362,9 +361,13 @@ public void getData()
         {
             g2.setColor(Color.white);
             g2.setFont(new Font("Courier New", Font.PLAIN, 23));
-            g2.drawImage(outro, 0, 01, null);
+            g2.drawImage(outro, 0, 0, null);
             g2.drawString("" + (int) score, 850, 225);
             g2.setFont(font);
+        }
+        if(view == 5)
+        {
+            g2.drawImage(instructPage, 0, 0, null);
         }
         //g2.draw(new Line2D.Double(0, dataMax, pWidth, dataMax));
         //g2.draw(new Line2D.Double(0, dataMin, pWidth, dataMin));
@@ -563,6 +566,10 @@ public void getData()
         {
             view = 5;
         }
+        else if(view == 5 && back.contains(m))
+        {
+            view = 3;
+        }
     }
 
     public void mouseDragged(MouseEvent e)
@@ -584,6 +591,8 @@ public void getData()
         else if(playAgain.contains(mouse))
             setCursor(new Cursor(Cursor.HAND_CURSOR));
         else if(instructions.contains(mouse))
+            setCursor(new Cursor(Cursor.HAND_CURSOR));
+        else if(back.contains(mouse))
             setCursor(new Cursor(Cursor.HAND_CURSOR));
         else if(!(getCursor().equals(Cursor.CROSSHAIR_CURSOR)))
             setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
