@@ -10,7 +10,7 @@ import java.awt.geom.Line2D;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 
-public class PolyRacer extends Applet
+public class HackingCancer extends Applet
         implements MouseListener, MouseMotionListener, KeyListener, Runnable, WindowListener
 {
     /**
@@ -30,7 +30,7 @@ public class PolyRacer extends Applet
     ArrayList<Point> path = new ArrayList<Point>(), data = new ArrayList<Point>();
     ArrayList<Monster> mobs = new ArrayList<Monster>();
     Player player = null;
-    Image outro, intro, instructPage;
+    Image outro, intro, instructPage, walkLeft, walkRight, blob;
     boolean right = false, left = false, up = false, down = false, scaled = false;
     int framesPerSecond = 60, view = 3;
     double scaleAnimation = 1, score = 0;
@@ -145,60 +145,62 @@ public class PolyRacer extends Applet
 
         start();//starts main thread
     }
-public void getData()
-{
-    boolean dipp = false;
-    dataMax = 50 + 70 + (pHeight / 2) + 25;
-    dataMin = -70 + (pHeight / 2) - 25;
-    for(int i = 0, j = 0; i < 10000; i++)
+
+    public void getData()
     {
-        int switchVar = random.nextInt(50) + 1;
-
-        if(j % switchVar == 0)
+        boolean dipp = false;
+        dataMax = 50 + 70 + (pHeight / 2) + 25;
+        dataMin = -70 + (pHeight / 2) - 25;
+        for(int i = 0, j = 0; i < 10000; i++)
         {
-            dipp = random.nextBoolean();
-        }
+            int switchVar = random.nextInt(50) + 1;
 
-        if(j == 0)
-        {
-            j = 1;
-        }
-
-        int randomMess = random.nextInt(150);
-        int randomValue = random.nextInt(50);
-        int randomOffset = random.nextInt(70);
-        if(dipp)
-        {
-
-            //Main dipped dots
-            data.add(new Point((int) ((double) (pWidth) / 10000 * i), randomValue + pHeight / 2 + 25));
-            data.add(new Point((int) ((double) i), randomMess + pHeight / 3 + 20));
-            data.add(new Point((int) ((double) i), randomMess + pHeight / 2));
-
-            if(i < 99999)
+            if(j % switchVar == 0)
             {
-                //Random Extra dots
-                data.add(++i, new Point((int) ((double) (pWidth) / 10000 * i), randomValue + randomOffset + pHeight / 2 + 25));
+                dipp = random.nextBoolean();
+            }
+
+            if(j == 0)
+            {
+                j = 1;
+            }
+
+            int randomMess = random.nextInt(150);
+            int randomValue = random.nextInt(50);
+            int randomOffset = random.nextInt(70);
+            if(dipp)
+            {
+
+                //Main dipped dots
+                data.add(new Point((int) ((double) (pWidth) / 10000 * i), randomValue + pHeight / 2 + 25));
+                data.add(new Point((int) ((double) i), randomMess + pHeight / 3 + 20));
+                data.add(new Point((int) ((double) i), randomMess + pHeight / 2));
+
+                if(i < 99999)
+                {
+                    //Random Extra dots
+                    data.add(++i, new Point((int) ((double) (pWidth) / 10000 * i), randomValue + randomOffset + pHeight / 2 + 25));
+                }
+
+            }
+            else
+            {
+
+                data.add(new Point((int) ((double) (pWidth) / 10000 * i), randomValue + pHeight / 2 - 25));
+                data.add(new Point((int) ((double) i), randomMess + pHeight / 3 + 20));
+                data.add(new Point((int) ((double) i), randomMess + pHeight / 2));
+
+                if(i < 99999)
+                {
+                    //Random Extra dots
+                    data.add(++i, new Point((int) ((double) (pWidth) / 10000 * i), randomValue - randomOffset + pHeight / 2 - 25));
+                }
+
             }
 
         }
-        else
-        {
-
-            data.add(new Point((int) ((double) (pWidth) / 10000 * i), randomValue + pHeight / 2 - 25));
-            data.add(new Point((int) ((double) i), randomMess + pHeight / 3 + 20 ));
-            data.add(new Point((int) ((double) i), randomMess + pHeight / 2));
-
-            if(i < 99999)
-            {
-                //Random Extra dots
-                data.add(++i, new Point((int) ((double) (pWidth) / 10000 * i), randomValue - randomOffset + pHeight / 2 - 25));
-            }
-
-        }
-
     }
-}
+
     public void drawButton(Graphics2D g)
     {
         g.setColor(Color.red);
@@ -317,18 +319,18 @@ public void getData()
                 dot = dots.next();
                 //Point d = new Point((int) (dot.getX() * scaleAnimation), (int) ((dot.getY() - (((double) dataMin) / ((double) pHeight / ((double) dataMax - (double) dataMin))) * scaleAnimation) * scaleAnimation));
                 if((dot.getX() > player.getX() - pWidth / 2 || dot.getX() < player.getX() + pWidth / 2) && (dot.getY() > player.getY() - pHeight / 2 || dot.getY() < player.getY() + pHeight / 2))
-                    g2.fillRect((int) (dot.getX() - player.getX() + pWidth/2), (int) (dot.getY() - player.getY() + pHeight/2), 1, 1);
+                    g2.fillRect((int) (dot.getX() - player.getX() + pWidth / 2), (int) (dot.getY() - player.getY() + pHeight / 2), 1, 1);
                 if(player.getRectangle().contains(new Point((int) (dot.getX()), (int) (dot.getY()))))
                 {
                     dots.remove();
                     score++;
                 }
-                else if(new Rectangle((int)(player.getX()-20), (int)(player.getY()-20), 50,60).contains(new Point((int) (dot.getX()), (int) (dot.getY()))))
+                else if(new Rectangle((int) (player.getX() - 20), (int) (player.getY() - 20), 50, 60).contains(new Point((int) (dot.getX()), (int) (dot.getY()))))
                 {
-                    if(dot.getX()<player.getX())dot.setLocation(dot.getX()+1, dot.getY());
-                    if(dot.getX()>player.getX())dot.setLocation(dot.getX()-1, dot.getY());
-                    if(dot.getY()<player.getY())dot.setLocation(dot.getX(), dot.getY()+1);
-                    if(dot.getY()>player.getY())dot.setLocation(dot.getX(), dot.getY()-1);
+                    if(dot.getX() < player.getX()) dot.setLocation(dot.getX() + 1, dot.getY());
+                    if(dot.getX() > player.getX()) dot.setLocation(dot.getX() - 1, dot.getY());
+                    if(dot.getY() < player.getY()) dot.setLocation(dot.getX(), dot.getY() + 1);
+                    if(dot.getY() > player.getY()) dot.setLocation(dot.getX(), dot.getY() - 1);
                 }
             }
             //System.out.println("X: " + path.get(0).getX() + " Y: " + path.get(0).getY() + "  " + path.size());
@@ -346,19 +348,19 @@ public void getData()
                     //g2.draw(current);
                     //Shape current = new Line2D.Double(previous.getX()- player.getX() + pWidth/2, previous.getY() - player.getY() + pHeight/2, next.getX() - player.getX() + pWidth/2, next.getY() - player.getY() + pHeight/2);
                     g2.setStroke(new BasicStroke(2));
-                    g2.draw(new Line2D.Double((int)(previous.getX()- player.getX() + pWidth/2), (int)(previous.getY() - player.getY() + pHeight/2), (int)(next.getX() - player.getX() + pWidth/2), (int)(next.getY() - player.getY() + pHeight/2)));
+                    g2.draw(new Line2D.Double((int) (previous.getX() - player.getX() + pWidth / 2), (int) (previous.getY() - player.getY() + pHeight / 2), (int) (next.getX() - player.getX() + pWidth / 2), (int) (next.getY() - player.getY() + pHeight / 2)));
                     //if(player != null)
-                      //  physics(new Line2D.Double(previous.getX(), previous.getY(), next.getX(), next.getY()));//new Line2D.Double(previous.getX(), previous.getY(), next.getX(), next.getY()));
+                    //  physics(new Line2D.Double(previous.getX(), previous.getY(), next.getX(), next.getY()));//new Line2D.Double(previous.getX(), previous.getY(), next.getX(), next.getY()));
                     previous = next;
                 }
-                g2.fillOval((int) (previous.getX() - player.getX() + pWidth/2 - 5), (int)(previous.getY()- player.getY() + pHeight/2 - 5), 10, 10);
+                g2.fillOval((int) (previous.getX() - player.getX() + pWidth / 2 - 5), (int) (previous.getY() - player.getY() + pHeight / 2 - 5), 10, 10);
 
             }
             g2.setColor(Color.red);
-            for(int i = 0;i<mobs.size();i++)
-                g2.fillRect((int) (mobs.get(i).getX()- player.getX() + pWidth/2), (int) (mobs.get(i).getY()- player.getY() + pHeight/2), 15, 15);
+            for(int i = 0; i < mobs.size(); i++)
+                g2.fillRect((int) (mobs.get(i).getX() - player.getX() + pWidth / 2), (int) (mobs.get(i).getY() - player.getY() + pHeight / 2), 15, 15);
             g2.setColor(Color.yellow);
-            g2.fillRect((int)(pWidth/2), (int)(pHeight/2), 10, 20);
+            g2.fillRect((int) (pWidth / 2), (int) (pHeight / 2), 10, 20);
             g2.drawString("X: " + player.getX() + " Y: " + player.getY(), 20, 40);
             g2.drawString("X: " + path.get(0).getX() + " Y: " + path.get(0).getY() + "  " + path.size(), 20, 60);
             g2.drawString("X: " + path.get(1).getX() + " Y: " + path.get(1).getY() + "  " + path.size(), 20, 80);
@@ -397,6 +399,7 @@ public void getData()
             s.setRectangle(new Rectangle((int) s.getX(), (int) (s.getY() - 1), 10, 20));
         }
     }
+
     public void jump(Sprite s)
     {
         if(s != null)
@@ -413,20 +416,21 @@ public void getData()
                 ((Monster) s).nextMove(player);
         }
     }
+
     public void gameUpdate()
     {
         //System.out.println("X: " + player.getX() + " Y: " + player.getY());
         //System.out.println("X: " + path.get(0).getX() + " Y: " + path.get(0).getY() + "  " + path.size());
         if(player != null)
         {
-            if(player.getX()<0)
+            if(player.getX() < 0)
                 player.setVelocityX(2);
-            if(player.getX()>pWidth*scaleAnimation)
+            if(player.getX() > pWidth * scaleAnimation)
                 view = 4;
             jump(player);
         }
-        if(mobs.size()>0)
-            for(int i = 0;i<mobs.size();i++)
+        if(mobs.size() > 0)
+            for(int i = 0; i < mobs.size(); i++)
             {
                 if(mobs.get(i).getRectangle().intersects(player.getRectangle()))
                     view = 4;
@@ -434,10 +438,12 @@ public void getData()
             }
         Point previous = null, next = null;
         Iterator<Point> it = path.iterator();
-        while (it.hasNext()) {//prints the line/land
-            if (previous == null)
+        while(it.hasNext())
+        {//prints the line/land
+            if(previous == null)
                 previous = it.next();
-            else {
+            else
+            {
                 next = it.next();
                 //Shape current = new Line2D.Double(previous.getX()- player.getX() + pWidth/2, previous.getY() - player.getY() + pHeight/2, next.getX() - player.getX() + pWidth/2, next.getY() - player.getY() + pHeight/2);
                 //g2.draw(current);
@@ -445,7 +451,7 @@ public void getData()
                 if(player != null)
                     physics(player, new Line2D.Double(previous.getX(), previous.getY(), next.getX(), next.getY()));//new Line2D.Double(previous.getX(), previous.getY(), next.getX(), next.getY()));
                 if(mobs.size() > 0)
-                    for(int i = 0;i<mobs.size();i++)
+                    for(int i = 0; i < mobs.size(); i++)
                         physics(mobs.get(i), new Line2D.Double(previous.getX(), previous.getY(), next.getX(), next.getY()));
                 previous = next;
             }
@@ -537,10 +543,10 @@ public void getData()
         if(view == 0 && startButton.contains(m) && path.size() > 0)
         {
             view = 1;
-            for(int i = 0;i< random.nextInt(3)+3; i++)
-                mobs.add(new Monster(new Rectangle(random.nextInt((int)(pWidth * scaleAnimation)), 0, 15, 15)));
-            path.add(0, new Point(0, (int)path.get(0).getY()));
-            path.add(new Point((int)(pWidth * scaleAnimation), (int)path.get(path.size()-1).getY()));
+            for(int i = 0; i < random.nextInt(3) + 3; i++)
+                mobs.add(new Monster(new Rectangle(random.nextInt((int) (pWidth * scaleAnimation)), 0, 15, 15)));
+            path.add(0, new Point(0, (int) path.get(0).getY()));
+            path.add(new Point((int) (pWidth * scaleAnimation), (int) path.get(path.size() - 1).getY()));
             if(player == null)
             {
                 player = new Player(new Rectangle((int) 0, (int) ((m.getY() - (((double) dataMin) / ((double) pHeight / ((double) dataMax - (double) dataMin))) * scaleAnimation) * scaleAnimation), 10, 20));
