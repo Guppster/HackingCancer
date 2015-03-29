@@ -371,7 +371,7 @@ public class HackingCancer extends Applet
             if(player.isFacingRight())
                 g2.drawImage(walkRight, (int) (pWidth / 2), (int) (pHeight / 2), null);
             else
-                g2.drawImage(walkLeft, (int) (pWidth / 2), (int) (pHeight / 2), null);
+                g2.drawImage(walkRight, (int) (pWidth / 2), (int) (pHeight / 2), null);
 
             //g2.fillRect((int) (pWidth / 2), (int) (pHeight / 2), 10, 20);
             g2.drawString("X: " + player.getX() + " Y: " + player.getY(), 20, 40);
@@ -557,7 +557,7 @@ public class HackingCancer extends Applet
         {
             view = 1;
             for(int i = 0; i < random.nextInt(3) + 3; i++)
-                mobs.add(new Monster(new Rectangle(random.nextInt((int) (pWidth * scaleAnimation)- 300)+300, -100, 15, 15)));
+                mobs.add(new Monster(new Rectangle(random.nextInt((int) (pWidth * scaleAnimation)- 300)+300, -100, 30, 20)));
             path.add(0, new Point(0, (int) path.get(0).getY()));
             path.add(new Point((int) (pWidth * scaleAnimation), (int) path.get(path.size() - 1).getY()));
             if(player == null)
