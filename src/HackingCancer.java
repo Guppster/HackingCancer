@@ -73,7 +73,7 @@ public class HackingCancer extends Applet
         return img;
     }
 
-    public boolean saveScore(int score)
+    public boolean saveScore()
     {
         try
         {
