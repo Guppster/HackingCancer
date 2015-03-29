@@ -410,6 +410,24 @@ public class HackingCancer extends Applet
             g2.setFont(new Font("Courier New", Font.PLAIN, 23));
             g2.drawImage(outro, 0, 0, null);
             g2.drawString("" + (int) score, 850, 225);
+            loadScore();
+            for(int i = 0; i < 10; i++)
+            {
+                if(score>highScores[i])
+                {
+                    int tmp = score;
+                    score = highScores[i];
+                    highScores[i] = tmp;
+                    for(int j = i; j < 10; j++)
+                    {
+                        tmp = score;
+                        score = highScores[j];
+                        highScores[j] = tmp;
+                    }
+                }
+                g2.drawString("" + (int) score, pWidth / 2 - 75, 200 + i * 30);
+            }
+            saveScore();
             g2.setFont(font);
         }
         if(view == 5)
@@ -424,7 +442,12 @@ public class HackingCancer extends Applet
         //bufferGraphics.drawString (powerups.size() + "", 100, 100);
         g.drawImage(bf, 0, 0, this);
     }
-
+public void swap(int i, int j)
+{
+    int tmp = i;
+    i = j;
+    j = tmp;
+}
     public void physics(Sprite s, Line2D current)
     {
 
