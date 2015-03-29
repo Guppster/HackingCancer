@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import java.applet.*;
 import java.awt.*;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.awt.geom.Line2D;
 import java.awt.event.*;
@@ -157,7 +158,7 @@ public class HackingCancer extends Applet
         standLeft = getImage("standLeft.png");
         font = new Font("Impact", Font.PLAIN, 20);
 
-        startButton = new Rectangle(pWidth - 101, pHeight - 51, 100, 50);
+        startButton = new Rectangle(810, 520, 130, 40);
         play = new Rectangle(120, 410, 130, 40);
         playAgain = new Rectangle(90, 480, 130, 40);
         instructions = new Rectangle(740, 410, 130, 40);
@@ -166,6 +167,8 @@ public class HackingCancer extends Applet
         medium = new Rectangle(pWidth / 2 - 50, pHeight - 50, 100, 20);
         easy = new Rectangle(pWidth / 2 + 80, pHeight - 50, 75, 20);
 
+        for(int i =0;i<10;i++)
+            highScores[i] = 0;
         getData();
 
         start();//starts main thread
@@ -426,24 +429,17 @@ public class HackingCancer extends Applet
             g2.setFont(new Font("Courier New", Font.PLAIN, 23));
             g2.drawImage(outro, 0, 0, null);
             g2.drawString("" + (int) score, 850, 225);
-            loadScore();
+            //loadScore();
+            if(score>highScores[0])
+            {
+                highScores[0] = (int)score;
+            }
+            Arrays.sort(highScores);
             for(int i = 0; i < 10; i++)
             {
-                if(score>highScores[i])
-                {
-                    int tmp = (int)score;
-                    score = highScores[i];
-                    highScores[i] = tmp;
-                    for(int j = i; j < 10; j++)
-                    {
-                        tmp = (int)score;
-                        score = highScores[j];
-                        highScores[j] = tmp;
-                    }
-                }
-                g2.drawString("" + (int) score, pWidth / 2 - 75, 200 + i * 30);
+                g2.drawString("" + (int) highScores[i], pWidth / 2 - 75, 200 + i * 30);
             }
-            saveScore();
+            //saveScore();
             g2.setFont(font);
         }
         if(view == 5)
@@ -458,12 +454,6 @@ public class HackingCancer extends Applet
         //bufferGraphics.drawString (powerups.size() + "", 100, 100);
         g.drawImage(bf, 0, 0, this);
     }
-public void swap(int i, int j)
-{
-    int tmp = i;
-    i = j;
-    j = tmp;
-}
     public void physics(Sprite s, Line2D current)
     {
 
@@ -650,7 +640,7 @@ public void swap(int i, int j)
             mobs = new ArrayList<Monster>();
             player = null;
             scaled = false;
-            score = 0;
+            //score = 0;
             scaleAnimation = 1;
             getData();
         }
