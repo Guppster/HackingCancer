@@ -30,7 +30,7 @@ public class HackingCancer extends Applet
     ArrayList<Point> path = new ArrayList<Point>(), data = new ArrayList<Point>();
     ArrayList<Monster> mobs = new ArrayList<Monster>();
     Player player = null;
-    Image outro, intro, instructPage, walkLeft, walkRight, blob;
+    Image outro, intro, instructPage, walkLeft, walkRight, blob, pathImg;
     boolean right = false, left = false, up = false, down = false, scaled = false;
     int framesPerSecond = 60, view = 3;
     double scaleAnimation = 1, score = 0;
@@ -133,6 +133,10 @@ public class HackingCancer extends Applet
         outro = getImage("OutroPage.png");
         intro = getImage("IntroPage.png");
         instructPage = getImage("InfoPage.png");
+        walkLeft = getImage("left.gif");
+        walkRight = getImage("right.gif");
+        blob = getImage("blob.gif");
+        pathImg = getImage("blob.png");
         font = new Font("Impact", Font.PLAIN, 20);
 
         startButton = new Rectangle(pWidth - 101, pHeight - 51, 100, 50);
@@ -247,6 +251,7 @@ public class HackingCancer extends Applet
         }
         else if(view == 0)
         {//SETTING PATH
+            g2.drawImage(pathImg, 0, 0, null);
             g2.setColor(Color.cyan);
             for(int i = 0; i < 10000; i++)
                 g2.drawRect((int) data.get(i).getX(), (int) data.get(i).getY(), 1, 1);
@@ -270,6 +275,7 @@ public class HackingCancer extends Applet
         }
         else if(view == 1)
         {//ZOOMING IN ON GAME
+            g2.drawImage(pathImg, 0, 0, null);
             if(scaleAnimation < (double) pHeight / (double) (dataMax - dataMin))
                 scaleAnimation += 0.01;
             else if(scaleAnimation > (double) pHeight / (double) (dataMax - dataMin))
@@ -356,11 +362,20 @@ public class HackingCancer extends Applet
                 g2.fillOval((int) (previous.getX() - player.getX() + pWidth / 2 - 5), (int) (previous.getY() - player.getY() + pHeight / 2 - 5), 10, 10);
 
             }
-            g2.setColor(Color.red);
+            //g2.setColor(Color.red);
             for(int i = 0; i < mobs.size(); i++)
-                g2.fillRect((int) (mobs.get(i).getX() - player.getX() + pWidth / 2), (int) (mobs.get(i).getY() - player.getY() + pHeight / 2), 15, 15);
-            g2.setColor(Color.yellow);
-            g2.fillRect((int) (pWidth / 2), (int) (pHeight / 2), 10, 20);
+                g2.drawImage(blob, (int) (mobs.get(i).getX() - player.getX() + pWidth / 2),
+                        (int) (mobs.get(i).getY() - player.getY() + pHeight / 2),
+                        (int) (mobs.get(i).getX() - player.getX() + pWidth / 2) + 15,
+                        (int) (mobs.get(i).getY() - player.getY() + pHeight / 2) + 15, 0, 0, 500, 340, null);
+            //g2.fillRect((int) (mobs.get(i).getX() - player.getX() + pWidth / 2), (int) (mobs.get(i).getY() - player.getY() + pHeight / 2), 15, 15);
+            //g2.setColor(Color.yellow);
+            if(player.isFacingRight())
+                g2.drawImage(walkRight, (int) (pWidth / 2), (int) (pHeight / 2), (int) (pWidth / 2) + 10, (int) (pHeight / 2) + 20, 0, 0, 18, 26, null);
+            else
+                g2.drawImage(walkLeft, (int) (pWidth / 2), (int) (pHeight / 2), (int) (pWidth / 2) + 10, (int) (pHeight / 2) + 20, 0, 0, 18, 26, null);
+
+            //g2.fillRect((int) (pWidth / 2), (int) (pHeight / 2), 10, 20);
             g2.drawString("X: " + player.getX() + " Y: " + player.getY(), 20, 40);
             g2.drawString("X: " + path.get(0).getX() + " Y: " + path.get(0).getY() + "  " + path.size(), 20, 60);
             g2.drawString("X: " + path.get(1).getX() + " Y: " + path.get(1).getY() + "  " + path.size(), 20, 80);

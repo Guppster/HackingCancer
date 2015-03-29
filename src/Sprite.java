@@ -114,7 +114,7 @@ public class Sprite
         {
             facingRight = true;
         }
-        else
+        else if(velocityX<0)
         {
             facingRight = false;
         }
