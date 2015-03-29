@@ -136,7 +136,7 @@ public class HackingCancer extends Applet
         walkLeft = getImage("left.gif");
         walkRight = getImage("right.gif");
         blob = getImage("blob.gif");
-        pathImg = getImage("blob.png");
+        pathImg = getImage("ResearchView.png");
         font = new Font("Impact", Font.PLAIN, 20);
 
         startButton = new Rectangle(pWidth - 101, pHeight - 51, 100, 50);
