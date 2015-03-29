@@ -2,6 +2,9 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import jdk.nashorn.internal.parser.JSONParser;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.applet.*;
 import java.awt.*;
@@ -9,6 +12,7 @@ import java.util.*;
 import java.awt.geom.Line2D;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+
 
 public class HackingCancer extends Applet
         implements MouseListener, MouseMotionListener, KeyListener, Runnable, WindowListener
@@ -29,11 +33,13 @@ public class HackingCancer extends Applet
     Point mouse = new Point(0, 0);
     ArrayList<Point> path = new ArrayList<Point>(), data = new ArrayList<Point>();
     ArrayList<Monster> mobs = new ArrayList<Monster>();
+    int[] highScores = new int[10];
     Player player = null;
     Image outro, intro, instructPage, walkLeft, walkRight, blob, pathImg;
     boolean right = false, left = false, up = false, down = false, scaled = false;
     int framesPerSecond = 60, view = 3, difficulty = 1;
     double scaleAnimation = 1, score = 0;
+
 
     long period = ((long) (1000 / framesPerSecond)) * 1000000L;
     Rectangle startButton, play, instructions, playAgain, back;
@@ -71,11 +77,18 @@ public class HackingCancer extends Applet
     {
         try
         {
+            JSONObject obj = new JSONObject();
+            JSONArray arr = new JSONArray(Arrays.asList(highScores));
+            JSONArray jsonPath = new JSONArray(Arrays.asList(path));
+
+            obj.put("highscores",arr);
+            obj.put("path", jsonPath);
+
             HttpResponse<JsonNode> response = Unirest.post("https://tphummel-lru-cache.p.mashape.com/api/cache")
                     .header("X-Mashape-Key", "OpLVYdsmHgmshpfFS0t3pLcAcM0dp1lquf1jsnN0CCFde9HqSx")
                     .header("Content-Type", "application/json")
                     .header("Accept", "application/json")
-                    .body("{'Score':" + score + "}")
+                    .body(obj.toString())
                     .asJson();
             return true;
         } catch(UnirestException e)
@@ -85,9 +98,9 @@ public class HackingCancer extends Applet
         }
     }
 
-    public int loadScore()
+    public void loadScore()
     {
-        String data;
+        JSONObject data;
         //Check health of data
         try
         {
@@ -96,23 +109,26 @@ public class HackingCancer extends Applet
                     .header("Accept", "application/json")
                     .asJson();
 
-            data = response.getBody().toString().split(":")[1].replace(" ", "").replace("\"", "");
+            data = response.getBody().getObject();
 
-            if(data.equals("OK"))
+            if(data.getString("status").equalsIgnoreCase("OK"))
             {
                 response = Unirest.get("https://tphummel-lru-cache.p.mashape.com/api/cache/4551a08f-6506-48f4-afe9-e6add1b3bab3")
                         .header("X-Mashape-Key", "OpLVYdsmHgmshpfFS0t3pLcAcM0dp1lquf1jsnN0CCFde9HqSx")
                         .header("Accept", "application/json")
                         .asJson();
+            }
 
-                return Integer.valueOf(response.getBody().toString().split(":")[1].replace("}", ""));
+            data = response.getBody().getObject();
+
+            for (int i = 0; i < 10; i++) {
+                highScores[i] = data.getJSONArray("highscores").getInt(i);
             }
 
         } catch(UnirestException e)
         {
             e.printStackTrace();
         }
-        return 0;
     }
 
     /**
@@ -263,7 +279,7 @@ public class HackingCancer extends Applet
             g2.fillOval(pWidth/2 + 80, pHeight - 50, 20, 20);
             else
             g2.drawOval(pWidth / 2 + 80, pHeight - 50, 20, 20);
-            g2.drawString("Easy", pWidth/2 + 105, pHeight - 30);
+            g2.drawString("Easy", pWidth / 2 + 105, pHeight - 30);
         }
         else if(view == 0)
         {//SETTING PATH
