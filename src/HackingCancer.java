@@ -414,9 +414,9 @@ public class HackingCancer extends Applet
             else
                 g2.drawImage(standLeft, (int) (pWidth / 2), (int) (pHeight / 2), null);
             //g2.fillRect((int) (pWidth / 2), (int) (pHeight / 2), 10, 20);
-            g2.drawString("X: " + player.getX() + " Y: " + player.getY(), 20, 40);
-            g2.drawString("X: " + path.get(0).getX() + " Y: " + path.get(0).getY() + "  " + path.size(), 20, 60);
-            g2.drawString("X: " + path.get(1).getX() + " Y: " + path.get(1).getY() + "  " + path.size(), 20, 80);
+            //g2.drawString("X: " + player.getX() + " Y: " + player.getY(), 20, 40);
+            //g2.drawString("X: " + path.get(0).getX() + " Y: " + path.get(0).getY() + "  " + path.size(), 20, 60);
+            //g2.drawString("X: " + path.get(1).getX() + " Y: " + path.get(1).getY() + "  " + path.size(), 20, 80);
 
         }
         if(view == 4)

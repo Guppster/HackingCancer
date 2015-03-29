@@ -3,8 +3,8 @@
     <output-path>$PROJECT_DIR$/out/artifacts/HackWestern_jar</output-path>
     <root id="archive" name="HackWestern.jar">
       <element id="module-output" name="HackWestern" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/unirest-java-1.4.5.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/json-20140107.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/unirest-java-1.4.5.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>
