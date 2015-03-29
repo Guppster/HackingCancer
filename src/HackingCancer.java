@@ -426,7 +426,7 @@ public class HackingCancer extends Applet
             g2.setFont(new Font("Courier New", Font.PLAIN, 23));
             g2.drawImage(outro, 0, 0, null);
             g2.drawString("" + (int) score, 850, 225);
-            loadScore();
+//            loadScore();
             for(int i = 0; i < 10; i++)
             {
                 if(score>highScores[i])
@@ -443,7 +443,7 @@ public class HackingCancer extends Applet
                 }
                 g2.drawString("" + (int) score, pWidth / 2 - 75, 200 + i * 30);
             }
-            saveScore();
+          //  saveScore();
             g2.setFont(font);
         }
         if(view == 5)
