@@ -168,7 +168,7 @@ public class HackingCancer extends Applet
         easy = new Rectangle(pWidth / 2 + 80, pHeight - 50, 75, 20);
 
         for(int i =0;i<10;i++)
-            highScores[i] = 0;
+            highScores[i] = random.nextInt(1000);
         getData();
 
         start();//starts main thread
@@ -227,12 +227,6 @@ public class HackingCancer extends Applet
             }
 
         }
-    }
-
-    public void drawButton(Graphics2D g)
-    {
-        g.setColor(Color.red);
-        g.drawRect((int) startButton.getX(), (int) startButton.getY(), (int) startButton.getWidth(), (int) startButton.getHeight());
     }
 
     /**
@@ -311,7 +305,6 @@ public class HackingCancer extends Applet
                 }
                 g2.fillOval((int) (previous.getX() - 5), (int) (previous.getY() - 5), 10, 10);
             }
-            drawButton(g2);
         }
         else if(view == 1)
         {//ZOOMING IN ON GAME
@@ -435,11 +428,11 @@ public class HackingCancer extends Applet
                 highScores[0] = (int)score;
             }
             Arrays.sort(highScores);
+            //saveScore();
             for(int i = 0; i < 10; i++)
             {
                 g2.drawString("" + (int) highScores[i], pWidth / 2 - 75, 200 + i * 30);
             }
-            //saveScore();
             g2.setFont(font);
         }
         if(view == 5)

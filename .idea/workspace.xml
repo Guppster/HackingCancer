@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="35835272-25ec-4032-9bc5-46154a1e8af3" name="Default" comment="" />
+    <list default="true" id="71a3e5f6-8ae9-4a71-9e22-01322b5800cf" name="Default" comment="" />
     <ignored path="HackWestern.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/out/" />
@@ -28,47 +28,8 @@
       <file leaf-file-name="HackingCancer.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/HackingCancer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.48825064" vertical-offset="7191" max-vertical-offset="13549">
-              <caret line="434" column="37" selection-start-line="434" selection-start-column="37" selection-end-line="434" selection-end-column="37" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#1175#1182#0" expanded="true" />
-                <element signature="e#1206#1213#0" expanded="true" />
-                <element signature="e#1260#1269#0" expanded="true" />
-                <element signature="e#8079#8080#0" expanded="true" />
-                <element signature="e#8103#8104#0" expanded="true" />
-                <element signature="e#24679#24680#0" expanded="true" />
-                <element signature="e#24717#24718#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Monster.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Monster.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="238" max-vertical-offset="3043">
-              <caret line="22" column="5" selection-start-line="22" selection-start-column="5" selection-end-line="22" selection-end-column="5" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Player.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Player.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="391">
-              <caret line="14" column="32" selection-start-line="14" selection-start-column="32" selection-end-line="14" selection-end-column="32" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Sprite.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Sprite.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="204" max-vertical-offset="1564">
-              <caret line="20" column="25" selection-start-line="20" selection-start-column="25" selection-end-line="20" selection-end-column="25" />
+            <state vertical-scroll-proportion="18.509138" vertical-offset="0" max-vertical-offset="13090">
+              <caret line="434" column="13" selection-start-line="434" selection-start-column="13" selection-end-line="434" selection-end-column="13" />
               <folding />
             </state>
           </provider>
@@ -82,7 +43,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/Monster.java" />
         <option value="$PROJECT_DIR$/src/HackingCancer.java" />
       </list>
     </option>
@@ -150,9 +110,8 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
       <pane id="Scope" />
-      <pane id="Scratches" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -162,21 +121,12 @@
     <property name="MemberChooser.sorted" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="MemberChooser.copyJavadoc" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/json-20140107.jar!/" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/json-20140107.jar!/" />
     <property name="recentsLimit" value="5" />
     <property name="dynamic.classpath" value="false" />
-  </component>
-  <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\mlh\Desktop\HackingCancer" />
-      <recent name="C:\Users\mlh\Desktop\HackingCancer\src" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\mlh\Desktop\HackingCancer" />
-    </key>
   </component>
   <component name="RunManager" selected="Applet.HackingCancer">
     <configuration default="false" name="HackingCancer" type="Applet" factoryName="Applet" temporary="true">
@@ -359,10 +309,10 @@
   <component name="ShelveChangesManager" show_recycled="false" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="40530bb7-1708-4b16-bbcb-22b9d2f98527" name="Default" comment="" />
-      <created>1427601442182</created>
+      <changelist id="71a3e5f6-8ae9-4a71-9e22-01322b5800cf" name="Default" comment="" />
+      <created>1427620752653</created>
       <option name="number" value="Default" />
-      <updated>1427601442182</updated>
+      <updated>1427620752653</updated>
     </task>
     <servers />
   </component>
@@ -376,14 +326,14 @@
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3288889" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3288889" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
@@ -421,44 +371,11 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/Player.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="391">
-          <caret line="14" column="32" selection-start-line="14" selection-start-column="32" selection-end-line="14" selection-end-column="32" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Monster.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="238" max-vertical-offset="3043">
-          <caret line="22" column="5" selection-start-line="22" selection-start-column="5" selection-end-line="22" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sprite.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="204" max-vertical-offset="1564">
-          <caret line="20" column="25" selection-start-line="20" selection-start-column="25" selection-end-line="20" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/HackingCancer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.48825064" vertical-offset="7191" max-vertical-offset="13549">
-          <caret line="434" column="37" selection-start-line="434" selection-start-column="37" selection-end-line="434" selection-end-column="37" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1175#1182#0" expanded="true" />
-            <element signature="e#1206#1213#0" expanded="true" />
-            <element signature="e#1260#1269#0" expanded="true" />
-            <element signature="e#8079#8080#0" expanded="true" />
-            <element signature="e#8103#8104#0" expanded="true" />
-            <element signature="e#24679#24680#0" expanded="true" />
-            <element signature="e#24717#24718#0" expanded="true" />
-          </folding>
+        <state vertical-scroll-proportion="18.509138" vertical-offset="0" max-vertical-offset="13090">
+          <caret line="434" column="13" selection-start-line="434" selection-start-column="13" selection-end-line="434" selection-end-column="13" />
+          <folding />
         </state>
       </provider>
     </entry>
