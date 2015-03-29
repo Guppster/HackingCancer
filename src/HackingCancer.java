@@ -1,10 +1,10 @@
-import com.mashape.unirest.http.HttpResponse;
+/*import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import jdk.nashorn.internal.parser.JSONParser;
 import org.json.JSONArray;
-import org.json.JSONObject;
+import org.json.JSONObject;*/
 
 import java.applet.*;
 import java.awt.*;
@@ -74,7 +74,7 @@ public class HackingCancer extends Applet
         return img;
     }
 
-    public boolean saveScore()
+    /*public boolean saveScore()
     {
         try
         {
@@ -82,7 +82,7 @@ public class HackingCancer extends Applet
             JSONArray arr = new JSONArray(Arrays.asList(highScores));
             JSONArray jsonPath = new JSONArray(Arrays.asList(path));
 
-            obj.put("highscores",arr);
+            obj.put("highscores", arr);
             obj.put("path", jsonPath);
 
             HttpResponse<JsonNode> response = Unirest.post("https://tphummel-lru-cache.p.mashape.com/api/cache")
@@ -122,7 +122,8 @@ public class HackingCancer extends Applet
 
             data = response.getBody().getObject();
 
-            for (int i = 0; i < 10; i++) {
+            for(int i = 0; i < 10; i++)
+            {
                 highScores[i] = data.getJSONArray("highscores").getInt(i);
             }
 
@@ -130,7 +131,7 @@ public class HackingCancer extends Applet
         {
             e.printStackTrace();
         }
-    }
+    }*/
 
     /**
      * initializes applet
@@ -167,8 +168,8 @@ public class HackingCancer extends Applet
         medium = new Rectangle(pWidth / 2 - 50, pHeight - 50, 100, 20);
         easy = new Rectangle(pWidth / 2 + 80, pHeight - 50, 75, 20);
 
-        for(int i =0;i<10;i++)
-            highScores[i] = random.nextInt(1000);
+        for(int i = 0; i < 10; i++)
+            highScores[i] = 0;//random.nextInt(1000);
         getData();
 
         start();//starts main thread
@@ -286,11 +287,13 @@ public class HackingCancer extends Applet
         else if(view == 0)
         {//SETTING PATH
             g2.drawImage(pathImg, 0, 0, null);
+            g2.setColor(Color.white);
+            g2.drawString("Click to create a path consuming the greatest amount of orbs", 50, 50);
             g2.setColor(Color.cyan);
             for(int i = 0; i < 10000; i++)
                 g2.drawRect((int) data.get(i).getX(), (int) data.get(i).getY(), 1, 1);
 
-            g2.setColor(Color.green);
+            g2.setColor(Color.red);
             Point previous = null, next = null;
             Iterator<Point> it = path.iterator();
             while(it.hasNext())//prints path
@@ -320,7 +323,7 @@ public class HackingCancer extends Applet
 
             for(int i = 0; i < 10000; i++)
                 g2.drawRect((int) (data.get(i).getX() * scaleAnimation), (int) ((data.get(i).getY() - (((double) dataMin) / ((double) pHeight / ((double) dataMax - (double) dataMin))) * scaleAnimation) * scaleAnimation), 1, 1);
-            g2.setColor(Color.green);
+            g2.setColor(Color.red);
             Point previous = null, next = null;
             Iterator<Point> it = path.iterator();
             while(it.hasNext())
@@ -423,11 +426,11 @@ public class HackingCancer extends Applet
             g2.drawImage(outro, 0, 0, null);
             g2.drawString("" + (int) score, 850, 225);
             //loadScore();
-            if(score>highScores[0])
+            if(score > highScores[9])
             {
-                highScores[0] = (int)score;
+                highScores[9] = (int) score;
             }
-            Arrays.sort(highScores);
+            insertionSort(highScores);
             //saveScore();
             for(int i = 0; i < 10; i++)
             {
@@ -447,6 +450,24 @@ public class HackingCancer extends Applet
         //bufferGraphics.drawString (powerups.size() + "", 100, 100);
         g.drawImage(bf, 0, 0, this);
     }
+
+    public static void insertionSort(int[] num)
+    {
+        int j;                     // the number of items sorted so far
+        int key;                // the item to be inserted
+        int i;
+
+        for(j = 1; j < num.length; j++)    // Start with 1 (not 0)
+        {
+            key = num[j];
+            for(i = j - 1; (i >= 0) && (num[i] < key); i--)   // Smaller values are moving up
+            {
+                num[i + 1] = num[i];
+            }
+            num[i + 1] = key;    // Put the key in its proper location
+        }
+    }
+
     public void physics(Sprite s, Line2D current)
     {
 
@@ -607,7 +628,7 @@ public class HackingCancer extends Applet
         Point m = new Point(e.getX(), e.getY());
         if(view == 0 && startButton.contains(m) && path.size() > 0)
         {
-            System.out.print(pWidth * scaleAnimation);
+            //System.out.print(pWidth * scaleAnimation);
             view = 1;
             for(int i = 0; i < random.nextInt(3) + 3; i++)
                 mobs.add(new Monster(new Rectangle(random.nextInt((int) (pWidth * (double) pHeight / (double) (dataMax - dataMin)) - 500) + 500, -100, 30, 25), difficulty));

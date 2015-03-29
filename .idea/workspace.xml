@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="HackWestern:jar" />
+    </artifacts-to-build>
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="71a3e5f6-8ae9-4a71-9e22-01322b5800cf" name="Default" comment="" />
     <ignored path="HackWestern.iws" />
@@ -28,9 +33,17 @@
       <file leaf-file-name="HackingCancer.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/HackingCancer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="18.509138" vertical-offset="0" max-vertical-offset="13090">
-              <caret line="434" column="13" selection-start-line="434" selection-start-column="13" selection-end-line="434" selection-end-column="13" />
-              <folding />
+            <state vertical-scroll-proportion="0.28720626" vertical-offset="7676" max-vertical-offset="13736">
+              <caret line="458" column="0" selection-start-line="458" selection-start-column="0" selection-end-line="458" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#31220#0" expanded="true" />
+                <element signature="imports" expanded="true" />
+                <element signature="e#1179#1186#0" expanded="true" />
+                <element signature="e#1210#1217#0" expanded="true" />
+                <element signature="e#1264#1273#0" expanded="true" />
+                <element signature="e#7909#7910#0" expanded="true" />
+                <element signature="e#7933#7934#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -122,11 +135,12 @@
     <property name="MemberChooser.showClasses" value="true" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/json-20140107.jar!/" />
-    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="recentsLimit" value="5" />
     <property name="dynamic.classpath" value="false" />
+    <property name="LayoutCode.rearrangeEntriesJava" value="false" />
   </component>
   <component name="RunManager" selected="Applet.HackingCancer">
     <configuration default="false" name="HackingCancer" type="Applet" factoryName="Applet" temporary="true">
@@ -307,6 +321,9 @@
     </recent_temporary>
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="71a3e5f6-8ae9-4a71-9e22-01322b5800cf" name="Default" comment="" />
@@ -373,9 +390,17 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/HackingCancer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="18.509138" vertical-offset="0" max-vertical-offset="13090">
-          <caret line="434" column="13" selection-start-line="434" selection-start-column="13" selection-end-line="434" selection-end-column="13" />
-          <folding />
+        <state vertical-scroll-proportion="0.28720626" vertical-offset="7676" max-vertical-offset="13736">
+          <caret line="458" column="0" selection-start-line="458" selection-start-column="0" selection-end-line="458" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#31220#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+            <element signature="e#1179#1186#0" expanded="true" />
+            <element signature="e#1210#1217#0" expanded="true" />
+            <element signature="e#1264#1273#0" expanded="true" />
+            <element signature="e#7909#7910#0" expanded="true" />
+            <element signature="e#7933#7934#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -385,10 +410,12 @@
       <state key="ArtifactsStructureConfigurable.UI">
         <settings>
           <artifact-editor />
+          <last-edited>HackWestern:jar</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
                 <option value="0.2" />
+                <option value="0.5" />
               </list>
             </option>
           </splitter-proportions>
