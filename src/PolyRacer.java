@@ -230,7 +230,12 @@ public class PolyRacer extends Applet
         g2.setColor(Color.black);
         g2.fillRect(0, 0, pWidth, pHeight);
         double yy = (((double) dataMin) / ((double) pHeight / ((double) dataMax - (double) dataMin))) * scaleAnimation;
-        if(view == 0)
+        if(view == 3)
+        {
+            g2.setColor(Color.red);
+            g2.drawString("VIEW 3", 100, 100);
+        }
+        else if(view == 0)
         {//SETTING PATH
             g2.setColor(Color.white);
             for(int i = 0; i < 10000; i++)
@@ -335,12 +340,20 @@ public class PolyRacer extends Applet
                 g2.fillOval((int) (previous.getX() - player.getX() + pWidth/2 - 5), (int)(previous.getY()- player.getY() + pHeight/2 - 5), 10, 10);
 
             }
+            g2.setColor(Color.cyan);
+            for(int i = 0;i<mobs.size();i++)
+                g2.fillRect((int) (mobs.get(i).getX()- player.getX() + pWidth/2), (int) (mobs.get(i).getY()- player.getX() + pWidth/2), 15, 15);
             g2.setColor(Color.red);
             g2.fillRect((int)(pWidth/2), (int)(pHeight/2), 10, 20);
             g2.drawString("X: " + player.getX() + " Y: " + player.getY(), 20, 40);
             g2.drawString("X: " + path.get(0).getX() + " Y: " + path.get(0).getY() + "  " + path.size(), 20, 60);
             g2.drawString("X: " + path.get(1).getX() + " Y: " + path.get(1).getY() + "  " + path.size(), 20, 80);
 
+        }
+        if(view == 4)
+        {
+            g2.setColor(Color.red);
+            g2.drawString("VIEW 4", 100, 100);
         }
         //g2.draw(new Line2D.Double(0, dataMax, pWidth, dataMax));
         //g2.draw(new Line2D.Double(0, dataMin, pWidth, dataMin));
@@ -363,15 +376,6 @@ public class PolyRacer extends Applet
             s.setRectangle(new Rectangle((int) s.getX(), (int) (s.getY() - 1), 10, 20));
         }
     }
-public void ai()
-{
-    Iterator<Monster> it = mobs.iterator();
-    while(it.hasNext())
-    {
-        Monster m = it.next();
-
-    }
-}
     public void jump(Sprite s)
     {
         if(s != null)
@@ -383,10 +387,9 @@ public void ai()
             }
             else if(s.getVelocityY() >= 0)
                 s.setVelocityY(s.getVelocityY() - 1);
-            if(s instanceof Player)
             s.update();
-            else
-                ((Monster)s).nextMove(player);
+            if(s instanceof Monster)
+                ((Monster) s).nextMove(player);
         }
     }
     public void gameUpdate()
@@ -394,10 +397,20 @@ public void ai()
         //System.out.println("X: " + player.getX() + " Y: " + player.getY());
         //System.out.println("X: " + path.get(0).getX() + " Y: " + path.get(0).getY() + "  " + path.size());
         if(player != null)
+        {
+            if(player.getX()<0)
+                player.setVelocityX(2);
+            if(player.getX()>pWidth*scaleAnimation)
+                view = 4;
             jump(player);
+        }
         if(mobs.size()>0)
             for(int i = 0;i<mobs.size();i++)
+            {
+                if(mobs.get(i).getRectangle().intersects(player.getRectangle()))
+                    view = 4;
                 jump(mobs.get(i));
+            }
         Point previous = null, next = null;
         Iterator<Point> it = path.iterator();
         while (it.hasNext()) {//prints the line/land
@@ -410,7 +423,7 @@ public void ai()
                 //Shape current = new Line2D.Double(previous.getX()- player.getX() + pWidth/2, previous.getY() - player.getY() + pHeight/2, next.getX() - player.getX() + pWidth/2, next.getY() - player.getY() + pHeight/2);
                 if(player != null)
                     physics(player, new Line2D.Double(previous.getX(), previous.getY(), next.getX(), next.getY()));//new Line2D.Double(previous.getX(), previous.getY(), next.getX(), next.getY()));
-                if(mobs.get(0) != null)
+                if(mobs.size() > 0)
                     for(int i = 0;i<mobs.size();i++)
                         physics(mobs.get(i), new Line2D.Double(previous.getX(), previous.getY(), next.getX(), next.getY()));
                 previous = next;
@@ -418,9 +431,9 @@ public void ai()
             if(player != null)
             {
                 if(left)
-                    player.setVelocityX(-1);
+                    player.setVelocityX(-2);
                 else if(right)
-                    player.setVelocityX(1);
+                    player.setVelocityX(2);
                 else if(player.getVelocityX() > 0)
                     player.setVelocityX(player.getVelocityX() - 1);
                 else if(player.getVelocityX() < 0)
@@ -433,7 +446,6 @@ public void ai()
                 }
             }
         }
-        ai();
     }
 
     /**
@@ -501,23 +513,25 @@ public void ai()
     public void mouseClicked(MouseEvent e)
     {
         Point m = new Point(e.getX(), e.getY());
-        if(startButton.contains(m) && path.size() > 0)
+        if(view == 0 && startButton.contains(m) && path.size() > 0)
         {
-
             view = 1;
-        }
-        else if(view == 0)
-        {
-            path.add(m);
+            for(int i = 0;i< random.nextInt(5)+20; i++)
+                mobs.add(new Monster(new Rectangle(random.nextInt((int)path.get(path.size()-1).getX()), 0, 15, 15)));
+            mobs.add(new Monster(new Rectangle(20, 0, 15, 15)));
+            path.add(0, new Point(0, (int)path.get(0).getY()));
+            path.add(new Point((int)(pWidth * scaleAnimation), (int)path.get(path.size()-1).getY()));
             if(player == null)
             {
-                player = new Player(new Rectangle((int) (m.getX() * scaleAnimation), (int) ((m.getY() - (((double) dataMin) / ((double) pHeight / ((double) dataMax - (double) dataMin))) * scaleAnimation) * scaleAnimation), 10, 20));
-                for(int i = 0;i< random.nextInt(5)+5; i++)
-                    mobs.add(new Monster(new Rectangle(random.nextInt((int)path.get(path.size()-1).getX()), 0, 15, 15)));
+                player = new Player(new Rectangle((int) 0, (int) ((m.getY() - (((double) dataMin) / ((double) pHeight / ((double) dataMax - (double) dataMin))) * scaleAnimation) * scaleAnimation), 10, 20));
                 //player.setRectangle(new Rectangle((int)(player.getRectangle().getX() * scaleAnimation), (int) ((player.getRectangle().getY() - 20) * scaleAnimation), 10, 20));
                 //System.out.println("playerx: "+(int) (m.getX() * scaleAnimation) + "playery: "+(int) ((m.getY() - yy) * scaleAnimation));
                 //System.out.println("playerx: "+e.getX() * scaleAnimation  + "playery: "+(e.getY() - yy) * scaleAnimation);
             }
+        }
+        else if(view == 0)
+        {
+            path.add(m);
         }
     }
 
