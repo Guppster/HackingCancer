@@ -245,7 +245,7 @@ public void getData()
         }
         else if(view == 0)
         {//SETTING PATH
-            g2.setColor(Color.white);
+            g2.setColor(Color.cyan);
             for(int i = 0; i < 10000; i++)
                 g2.drawRect((int) data.get(i).getX(), (int) data.get(i).getY(), 1, 1);
 
@@ -275,7 +275,7 @@ public void getData()
                 scaleAnimation = (double) pHeight / (double) (dataMax - dataMin);
                 view = 2;
             }
-            g2.setColor(Color.white);
+            g2.setColor(Color.cyan);
 
             for(int i = 0; i < 10000; i++)
                 g2.drawRect((int) (data.get(i).getX() * scaleAnimation), (int) ((data.get(i).getY() - (((double) dataMin) / ((double) pHeight / ((double) dataMax - (double) dataMin))) * scaleAnimation) * scaleAnimation), 1, 1);
@@ -307,9 +307,9 @@ public void getData()
                 player.setRectangle(new Rectangle((int) (player.getX() * scaleAnimation), 0, 10, 20));
                 scaled = true;
             }
-            g2.setColor(Color.cyan);
-            g2.drawString("Score: " + score, 20, 20);
             g2.setColor(Color.white);
+            g2.drawString("Score: " + score, 20, 20);
+            g2.setColor(Color.cyan);
             Iterator<Point> dots = data.iterator();
             Point dot;
             while(dots.hasNext())
@@ -323,7 +323,13 @@ public void getData()
                     dots.remove();
                     score++;
                 }
-
+                else if(new Rectangle((int)(player.getX()-20), (int)(player.getY()-20), 50,60).contains(new Point((int) (dot.getX()), (int) (dot.getY()))))
+                {
+                    if(dot.getX()<player.getX())dot.setLocation(dot.getX()+1, dot.getY());
+                    if(dot.getX()>player.getX())dot.setLocation(dot.getX()-1, dot.getY());
+                    if(dot.getY()<player.getY())dot.setLocation(dot.getX(), dot.getY()+1);
+                    if(dot.getY()>player.getY())dot.setLocation(dot.getX(), dot.getY()-1);
+                }
             }
             //System.out.println("X: " + path.get(0).getX() + " Y: " + path.get(0).getY() + "  " + path.size());
             g2.setColor(Color.green);
@@ -348,10 +354,10 @@ public void getData()
                 g2.fillOval((int) (previous.getX() - player.getX() + pWidth/2 - 5), (int)(previous.getY()- player.getY() + pHeight/2 - 5), 10, 10);
 
             }
-            g2.setColor(Color.cyan);
+            g2.setColor(Color.red);
             for(int i = 0;i<mobs.size();i++)
                 g2.fillRect((int) (mobs.get(i).getX()- player.getX() + pWidth/2), (int) (mobs.get(i).getY()- player.getY() + pHeight/2), 15, 15);
-            g2.setColor(Color.red);
+            g2.setColor(Color.yellow);
             g2.fillRect((int)(pWidth/2), (int)(pHeight/2), 10, 20);
             g2.drawString("X: " + player.getX() + " Y: " + player.getY(), 20, 40);
             g2.drawString("X: " + path.get(0).getX() + " Y: " + path.get(0).getY() + "  " + path.size(), 20, 60);
