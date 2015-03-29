@@ -2,7 +2,7 @@
 
 HackingCancer.Me
 
-HackingCancer is an attempt to create a challenging web applet game in Java with the main purpose of utilizing the power of crowdsourcing to improve cancer research.
+##HackingCancer is an attempt to create a challenging web applet game in Java with the main purpose of utilizing the power of crowdsourcing to improve cancer research.
 
 This is a Side-Scroller, platformer game in which the user first creates their own map from visual representations of a Gene MicroArray. The user is challenged to determine the path with the most amount of orbs present which would allow them to collect these orbs in the second stage of the game. 
 
