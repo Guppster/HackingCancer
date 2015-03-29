@@ -32,12 +32,13 @@ public class PolyRacer extends Applet
     ArrayList<Point> path = new ArrayList<Point>(), data = new ArrayList<Point>();
     ArrayList<Monster> mobs = new ArrayList<Monster>();
     Player player = null;
+    Image outro, intro;
     boolean right = false, left = false, up = false, down = false, scaled = false;
-    int framesPerSecond = 60, view = 0;
+    int framesPerSecond = 60, view = 3;
     double scaleAnimation = 1, score = 0;
 
     long period = ((long) (1000 / framesPerSecond)) * 1000000L;
-    Rectangle startButton;
+    Rectangle startButton, play, instructions, playAgain;
 
     public Image getImage(String f)
     {
@@ -121,7 +122,6 @@ public class PolyRacer extends Applet
      */
     public void init()
     {
-        boolean dipp = false;
 
         setSize(pWidth, pHeight);
         setBackground(Color.black);
@@ -132,64 +132,73 @@ public class PolyRacer extends Applet
         addKeyListener(this);
         addMouseListener(this);
         addMouseMotionListener(this);
-
+        outro = getImage("OutroPage.png");
+        intro = getImage("IntroPage.png");
         font = new Font("Impact", Font.PLAIN, 20);
 
         startButton = new Rectangle(pWidth - 101, pHeight - 51, 100, 50);
-        dataMax = 50 + 70 + (pHeight / 2) + 25;
-        dataMin = -70 + (pHeight / 2) - 25;
-        for(int i = 0, j = 0; i < 10000; i++)
+        play = new Rectangle(120, 410, 130, 40);
+        playAgain = new Rectangle(90, 400, 130, 40);
+        instructions = new Rectangle(740, 410, 130, 40);
+
+        getData();
+
+        start();//starts main thread
+    }
+public void getData()
+{
+    boolean dipp = false;
+    dataMax = 50 + 70 + (pHeight / 2) + 25;
+    dataMin = -70 + (pHeight / 2) - 25;
+    for(int i = 0, j = 0; i < 10000; i++)
+    {
+        int switchVar = random.nextInt(50) + 1;
+
+        if(j % switchVar == 0)
         {
-            int switchVar = random.nextInt(50) + 1;
+            dipp = random.nextBoolean();
+        }
 
-            if(j % switchVar == 0)
+        if(j == 0)
+        {
+            j = 1;
+        }
+
+        int randomMess = random.nextInt(150);
+        int randomValue = random.nextInt(50);
+        int randomOffset = random.nextInt(70);
+        if(dipp)
+        {
+
+            //Main dipped dots
+            data.add(new Point((int) ((double) (pWidth) / 10000 * i), randomValue + pHeight / 2 + 25));
+            data.add(new Point((int) ((double) i), randomMess + pHeight / 3 + 20));
+            data.add(new Point((int) ((double) i), randomMess + pHeight / 2));
+
+            if(i < 99999)
             {
-                dipp = random.nextBoolean();
+                //Random Extra dots
+                data.add(++i, new Point((int) ((double) (pWidth) / 10000 * i), randomValue + randomOffset + pHeight / 2 + 25));
             }
 
-            if(j == 0)
+        }
+        else
+        {
+
+            data.add(new Point((int) ((double) (pWidth) / 10000 * i), randomValue + pHeight / 2 - 25));
+            data.add(new Point((int) ((double) i), randomMess + pHeight / 3 + 20 ));
+            data.add(new Point((int) ((double) i), randomMess + pHeight / 2));
+
+            if(i < 99999)
             {
-                j = 1;
-            }
-
-            int randomMess = random.nextInt(150);
-            int randomValue = random.nextInt(50);
-            int randomOffset = random.nextInt(70);
-            if(dipp)
-            {
-
-                //Main dipped dots
-                data.add(new Point((int) ((double) (pWidth) / 10000 * i), randomValue + pHeight / 2 + 25));
-                data.add(new Point((int) ((double) i), randomMess + pHeight / 3 + 20));
-                data.add(new Point((int) ((double) i), randomMess + pHeight / 2));
-
-                if(i < 99999)
-                {
-                    //Random Extra dots
-                    data.add(++i, new Point((int) ((double) (pWidth) / 10000 * i), randomValue + randomOffset + pHeight / 2 + 25));
-                }
-
-            }
-            else
-            {
-
-                data.add(new Point((int) ((double) (pWidth) / 10000 * i), randomValue + pHeight / 2 - 25));
-                data.add(new Point((int) ((double) i), randomMess + pHeight / 3 + 20 ));
-                data.add(new Point((int) ((double) i), randomMess + pHeight / 2));
-
-                if(i < 99999)
-                {
-                    //Random Extra dots
-                    data.add(++i, new Point((int) ((double) (pWidth) / 10000 * i), randomValue - randomOffset + pHeight / 2 - 25));
-                }
-
+                //Random Extra dots
+                data.add(++i, new Point((int) ((double) (pWidth) / 10000 * i), randomValue - randomOffset + pHeight / 2 - 25));
             }
 
         }
 
-        start();//starts main thread
     }
-
+}
     public void drawButton(Graphics2D g)
     {
         g.setColor(Color.red);
@@ -232,8 +241,7 @@ public class PolyRacer extends Applet
         double yy = (((double) dataMin) / ((double) pHeight / ((double) dataMax - (double) dataMin))) * scaleAnimation;
         if(view == 3)
         {
-            g2.setColor(Color.red);
-            g2.drawString("VIEW 3", 100, 100);
+            g2.drawImage(intro, 0, 0, null);
         }
         else if(view == 0)
         {//SETTING PATH
@@ -352,7 +360,11 @@ public class PolyRacer extends Applet
         }
         if(view == 4)
         {
-            g2.setColor(Color.red);
+            g2.setColor(Color.white);
+            g2.setFont(new Font("Courier New", Font.PLAIN, 23));
+            g2.drawImage(outro, 0, 01, null);
+            g2.drawString("" + (int) score, 850, 225);
+            g2.setFont(font);
         }
         //g2.draw(new Line2D.Double(0, dataMax, pWidth, dataMax));
         //g2.draw(new Line2D.Double(0, dataMin, pWidth, dataMin));
@@ -515,7 +527,7 @@ public class PolyRacer extends Applet
         if(view == 0 && startButton.contains(m) && path.size() > 0)
         {
             view = 1;
-            for(int i = 0;i< random.nextInt(5)+20; i++)
+            for(int i = 0;i< random.nextInt(3)+3; i++)
                 mobs.add(new Monster(new Rectangle(random.nextInt((int)(pWidth * scaleAnimation)), 0, 15, 15)));
             path.add(0, new Point(0, (int)path.get(0).getY()));
             path.add(new Point((int)(pWidth * scaleAnimation), (int)path.get(path.size()-1).getY()));
@@ -530,6 +542,26 @@ public class PolyRacer extends Applet
         else if(view == 0)
         {
             path.add(m);
+        }
+        else if(view == 4 && playAgain.contains(m))
+        {
+            view = 0;
+            path = new ArrayList<Point>();
+            data = new ArrayList<Point>();
+            mobs = new ArrayList<Monster>();
+            player = null;
+            scaled = false;
+            score = 0;
+            scaleAnimation = 1;
+            getData();
+        }
+        else if(view == 3 && play.contains(m))
+        {
+            view = 0;
+        }
+        else if(view == 3 && instructions.contains(m))
+        {
+            view = 5;
         }
     }
 
@@ -546,6 +578,12 @@ public class PolyRacer extends Applet
     {
         mouse.setLocation(e.getX(), e.getY());
         if(startButton.contains(mouse))
+            setCursor(new Cursor(Cursor.HAND_CURSOR));
+        else if(play.contains(mouse))
+            setCursor(new Cursor(Cursor.HAND_CURSOR));
+        else if(playAgain.contains(mouse))
+            setCursor(new Cursor(Cursor.HAND_CURSOR));
+        else if(instructions.contains(mouse))
             setCursor(new Cursor(Cursor.HAND_CURSOR));
         else if(!(getCursor().equals(Cursor.CROSSHAIR_CURSOR)))
             setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));

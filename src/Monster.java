@@ -28,7 +28,7 @@ public class Monster extends Sprite
 
         //If Monster is on the right side of Player
         if(monsterX - playerX > 100){}
-        if(playerX < monsterX)
+        else if(playerX < monsterX)
         {
             if(player.isFacingRight() && playerVelocity > 0)
             {
