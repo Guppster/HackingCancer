@@ -32,7 +32,7 @@ public class HackingCancer extends Applet
     Player player = null;
     Image outro, intro, instructPage, walkLeft, walkRight, blob, pathImg;
     boolean right = false, left = false, up = false, down = false, scaled = false;
-    int framesPerSecond = 60, view = 3;
+    int framesPerSecond = 60, view = 3, difficulty = 1;
     double scaleAnimation = 1, score = 0;
 
     long period = ((long) (1000 / framesPerSecond)) * 1000000L;
@@ -248,6 +248,22 @@ public class HackingCancer extends Applet
         if(view == 3)
         {
             g2.drawImage(intro, 0, 0, null);
+            g2.setColor(Color.white);
+            if(difficulty == 2)
+            g2.fillOval(pWidth / 2 - 150, pHeight - 50, 20, 20);
+            else
+            g2.drawOval(pWidth / 2 - 150, pHeight - 50, 20, 20);
+            g2.drawString("Hard", pWidth/2 - 125, pHeight - 30);
+            if(difficulty == 1)
+            g2.fillOval(pWidth / 2-50, pHeight - 50, 20, 20);
+            else
+            g2.drawOval(pWidth / 2 - 50, pHeight - 50, 20, 20);
+            g2.drawString("Medium", pWidth/2 - 25, pHeight - 30);
+            if(difficulty == 0)
+            g2.fillOval(pWidth/2 + 80, pHeight - 50, 20, 20);
+            else
+            g2.drawOval(pWidth / 2 + 80, pHeight - 50, 20, 20);
+            g2.drawString("Easy", pWidth/2 + 105, pHeight - 30);
         }
         else if(view == 0)
         {//SETTING PATH
@@ -275,7 +291,6 @@ public class HackingCancer extends Applet
         }
         else if(view == 1)
         {//ZOOMING IN ON GAME
-            g2.drawImage(pathImg, 0, 0, null);
             if(scaleAnimation < (double) pHeight / (double) (dataMax - dataMin))
                 scaleAnimation += 0.01;
             else if(scaleAnimation > (double) pHeight / (double) (dataMax - dataMin))
@@ -283,6 +298,7 @@ public class HackingCancer extends Applet
                 scaleAnimation = (double) pHeight / (double) (dataMax - dataMin);
                 view = 2;
             }
+            g2.drawImage(pathImg, 0, 0, (int)(pWidth*scaleAnimation), (int)(pHeight*scaleAnimation), 0, 0, pWidth, pHeight, null);
             g2.setColor(Color.cyan);
 
             for(int i = 0; i < 10000; i++)
@@ -312,7 +328,7 @@ public class HackingCancer extends Applet
                     data.set(i, new Point((int) (data.get(i).getX() * scaleAnimation), (int) ((data.get(i).getY() - (((double) dataMin) / ((double) pHeight / ((double) dataMax - (double) dataMin))) * scaleAnimation) * scaleAnimation)));
                 for(int j = 0; j < path.size(); j++)
                     path.set(j, new Point((int) (path.get(j).getX() * scaleAnimation), (int) ((path.get(j).getY() - (((double) dataMin) / ((double) pHeight / ((double) dataMax - (double) dataMin))) * scaleAnimation) * scaleAnimation)));
-                player.setRectangle(new Rectangle((int) (player.getX() * scaleAnimation), 0, 10, 20));
+                player.setRectangle(new Rectangle((int) (player.getX() * scaleAnimation), 0, 40, 40));
                 scaled = true;
             }
             g2.setColor(Color.white);
@@ -365,13 +381,13 @@ public class HackingCancer extends Applet
             //g2.setColor(Color.red);
             for(int i = 0; i < mobs.size(); i++)
                 g2.drawImage(blob, (int) (mobs.get(i).getX() - player.getX() + pWidth / 2),
-                        (int) (mobs.get(i).getY() - player.getY() + pHeight / 2), null);
+                        (int) (mobs.get(i).getY() - player.getY() + pHeight / 2)+20, null);
             //g2.fillRect((int) (mobs.get(i).getX() - player.getX() + pWidth / 2), (int) (mobs.get(i).getY() - player.getY() + pHeight / 2), 15, 15);
             //g2.setColor(Color.yellow);
             if(player.isFacingRight())
                 g2.drawImage(walkRight, (int) (pWidth / 2), (int) (pHeight / 2), null);
             else
-                g2.drawImage(walkRight, (int) (pWidth / 2), (int) (pHeight / 2), null);
+                g2.drawImage(walkLeft, (int) (pWidth / 2), (int) (pHeight / 2), null);
 
             //g2.fillRect((int) (pWidth / 2), (int) (pHeight / 2), 10, 20);
             g2.drawString("X: " + player.getX() + " Y: " + player.getY(), 20, 40);
@@ -408,8 +424,8 @@ public class HackingCancer extends Applet
             s.setGrounded(true);
             //player.setVelocityY(3);
             while(s.getRectangle().intersectsLine(current))
-                s.setRectangle(new Rectangle((int) s.getX(), (int) (s.getY() - 1), 10, 20));
-            s.setRectangle(new Rectangle((int) s.getX(), (int) (s.getY() - 1), 10, 20));
+                s.setRectangle(new Rectangle((int) s.getX(), (int) (s.getY() - 1), 40, 40));
+            s.setRectangle(new Rectangle((int) s.getX(), (int) (s.getY() - 1), 40, 40));
         }
     }
 
@@ -557,12 +573,12 @@ public class HackingCancer extends Applet
         {
             view = 1;
             for(int i = 0; i < random.nextInt(3) + 3; i++)
-                mobs.add(new Monster(new Rectangle(random.nextInt((int) (pWidth * scaleAnimation)- 300)+300, -100, 30, 20)));
+                mobs.add(new Monster(new Rectangle(random.nextInt((int) (pWidth * scaleAnimation)- 300)+300, -100, 30, 25)));
             path.add(0, new Point(0, (int) path.get(0).getY()));
             path.add(new Point((int) (pWidth * scaleAnimation), (int) path.get(path.size() - 1).getY()));
             if(player == null)
             {
-                player = new Player(new Rectangle((int) 0, (int) ((m.getY() - (((double) dataMin) / ((double) pHeight / ((double) dataMax - (double) dataMin))) * scaleAnimation) * scaleAnimation), 10, 20));
+                player = new Player(new Rectangle((int) 0, (int) ((m.getY() - (((double) dataMin) / ((double) pHeight / ((double) dataMax - (double) dataMin))) * scaleAnimation) * scaleAnimation), 40, 40));
                 //player.setRectangle(new Rectangle((int)(player.getRectangle().getX() * scaleAnimation), (int) ((player.getRectangle().getY() - 20) * scaleAnimation), 10, 20));
                 //System.out.println("playerx: "+(int) (m.getX() * scaleAnimation) + "playery: "+(int) ((m.getY() - yy) * scaleAnimation));
                 //System.out.println("playerx: "+e.getX() * scaleAnimation  + "playery: "+(e.getY() - yy) * scaleAnimation);
@@ -610,15 +626,15 @@ public class HackingCancer extends Applet
     public void mouseMoved(MouseEvent e)
     {
         mouse.setLocation(e.getX(), e.getY());
-        if(startButton.contains(mouse))
+        if(startButton.contains(mouse) && view == 0)
             setCursor(new Cursor(Cursor.HAND_CURSOR));
-        else if(play.contains(mouse))
+        else if(play.contains(mouse) && view == 3)
             setCursor(new Cursor(Cursor.HAND_CURSOR));
-        else if(playAgain.contains(mouse))
+        else if(playAgain.contains(mouse) && view == 4)
             setCursor(new Cursor(Cursor.HAND_CURSOR));
-        else if(instructions.contains(mouse))
+        else if(instructions.contains(mouse) && view == 3)
             setCursor(new Cursor(Cursor.HAND_CURSOR));
-        else if(back.contains(mouse))
+        else if(back.contains(mouse) && view == 5)
             setCursor(new Cursor(Cursor.HAND_CURSOR));
         else if(!(getCursor().equals(Cursor.CROSSHAIR_CURSOR)))
             setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
