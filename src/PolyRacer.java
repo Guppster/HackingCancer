@@ -132,6 +132,7 @@ public class PolyRacer extends Applet
         addMouseMotionListener(this);
         outro = getImage("OutroPage.png");
         intro = getImage("IntroPage.png");
+        instructPage = getImage("InfoPage.png");
         font = new Font("Impact", Font.PLAIN, 20);
 
         startButton = new Rectangle(pWidth - 101, pHeight - 51, 100, 50);
