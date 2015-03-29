@@ -30,7 +30,7 @@ public class HackingCancer extends Applet
     ArrayList<Point> path = new ArrayList<Point>(), data = new ArrayList<Point>();
     ArrayList<Monster> mobs = new ArrayList<Monster>();
     Player player = null;
-    Image outro, intro, instructPage, walkLeft, walkRight, blob, pathImg;
+    Image outro, intro, instructPage, walkLeft, walkRight, blob, pathImg, standRight, standLeft;
     boolean right = false, left = false, up = false, down = false, scaled = false;
     int framesPerSecond = 60, view = 3, difficulty = 1;
     double scaleAnimation = 1, score = 0;
@@ -137,6 +137,8 @@ public class HackingCancer extends Applet
         walkRight = getImage("right.gif");
         blob = getImage("blob.gif");
         pathImg = getImage("ResearchView.png");
+        standRight = getImage("standRight.png");
+        standLeft = getImage("standLeft.png");
         font = new Font("Impact", Font.PLAIN, 20);
 
         startButton = new Rectangle(pWidth - 101, pHeight - 51, 100, 50);
