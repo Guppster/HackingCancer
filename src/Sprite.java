@@ -1,8 +1,5 @@
 import java.awt.*;
 
-/**
- * Created by Gurpreet Singh on 3/28/2015.
- */
 public class Sprite
 {
 

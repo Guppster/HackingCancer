@@ -353,7 +353,6 @@ public class PolyRacer extends Applet
         if(view == 4)
         {
             g2.setColor(Color.red);
-            g2.drawString("VIEW 4", 100, 100);
         }
         //g2.draw(new Line2D.Double(0, dataMax, pWidth, dataMax));
         //g2.draw(new Line2D.Double(0, dataMin, pWidth, dataMin));
@@ -517,8 +516,7 @@ public class PolyRacer extends Applet
         {
             view = 1;
             for(int i = 0;i< random.nextInt(5)+20; i++)
-                mobs.add(new Monster(new Rectangle(random.nextInt((int)path.get(path.size()-1).getX()), 0, 15, 15)));
-            mobs.add(new Monster(new Rectangle(20, 0, 15, 15)));
+                mobs.add(new Monster(new Rectangle(random.nextInt((int)(pWidth * scaleAnimation)), 0, 15, 15)));
             path.add(0, new Point(0, (int)path.get(0).getY()));
             path.add(new Point((int)(pWidth * scaleAnimation), (int)path.get(path.size()-1).getY()));
             if(player == null)
