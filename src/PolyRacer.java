@@ -342,7 +342,7 @@ public class PolyRacer extends Applet
             }
             g2.setColor(Color.cyan);
             for(int i = 0;i<mobs.size();i++)
-                g2.fillRect((int) (mobs.get(i).getX()- player.getX() + pWidth/2), (int) (mobs.get(i).getY()- player.getX() + pWidth/2), 15, 15);
+                g2.fillRect((int) (mobs.get(i).getX()- player.getX() + pWidth/2), (int) (mobs.get(i).getY()- player.getY() + pHeight/2), 15, 15);
             g2.setColor(Color.red);
             g2.fillRect((int)(pWidth/2), (int)(pHeight/2), 10, 20);
             g2.drawString("X: " + player.getX() + " Y: " + player.getY(), 20, 40);
