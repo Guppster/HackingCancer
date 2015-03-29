@@ -365,15 +365,13 @@ public class HackingCancer extends Applet
             //g2.setColor(Color.red);
             for(int i = 0; i < mobs.size(); i++)
                 g2.drawImage(blob, (int) (mobs.get(i).getX() - player.getX() + pWidth / 2),
-                        (int) (mobs.get(i).getY() - player.getY() + pHeight / 2),
-                        (int) (mobs.get(i).getX() - player.getX() + pWidth / 2) + 15,
-                        (int) (mobs.get(i).getY() - player.getY() + pHeight / 2) + 15, 0, 0, 500, 340, null);
+                        (int) (mobs.get(i).getY() - player.getY() + pHeight / 2), null);
             //g2.fillRect((int) (mobs.get(i).getX() - player.getX() + pWidth / 2), (int) (mobs.get(i).getY() - player.getY() + pHeight / 2), 15, 15);
             //g2.setColor(Color.yellow);
             if(player.isFacingRight())
-                g2.drawImage(walkRight, (int) (pWidth / 2), (int) (pHeight / 2), (int) (pWidth / 2) + 10, (int) (pHeight / 2) + 20, 0, 0, 18, 26, null);
+                g2.drawImage(walkRight, (int) (pWidth / 2), (int) (pHeight / 2), null);
             else
-                g2.drawImage(walkLeft, (int) (pWidth / 2), (int) (pHeight / 2), (int) (pWidth / 2) + 10, (int) (pHeight / 2) + 20, 0, 0, 18, 26, null);
+                g2.drawImage(walkLeft, (int) (pWidth / 2), (int) (pHeight / 2), null);
 
             //g2.fillRect((int) (pWidth / 2), (int) (pHeight / 2), 10, 20);
             g2.drawString("X: " + player.getX() + " Y: " + player.getY(), 20, 40);
@@ -559,7 +557,7 @@ public class HackingCancer extends Applet
         {
             view = 1;
             for(int i = 0; i < random.nextInt(3) + 3; i++)
-                mobs.add(new Monster(new Rectangle(random.nextInt((int) (pWidth * scaleAnimation)), 0, 15, 15)));
+                mobs.add(new Monster(new Rectangle(random.nextInt((int) (pWidth * scaleAnimation)- 300)+300, -100, 15, 15)));
             path.add(0, new Point(0, (int) path.get(0).getY()));
             path.add(new Point((int) (pWidth * scaleAnimation), (int) path.get(path.size() - 1).getY()));
             if(player == null)
