@@ -32,6 +32,11 @@ public class Monster extends Sprite
             return;
         }
 
+        if(monsterX > 10)
+        {
+            this.setVelocityX(this.getVelocityX() * -1);
+        }
+
         if(playerX < monsterX)
         {
             if(player.isFacingRight() && playerVelocity > 0)
