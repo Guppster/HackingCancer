@@ -461,7 +461,7 @@ public class HackingCancer extends Applet
         if(mobs.size() > 0)
             for(int i = 0; i < mobs.size(); i++)
             {
-                if(mobs.get(i).getRectangle().intersects(player.getRectangle()))
+                if(new Rectangle((int)mobs.get(i).getX(), (int)mobs.get(i).getY()+20, 30, 25).intersects(player.getRectangle()))
                     view = 4;
                 jump(mobs.get(i));
             }
@@ -573,7 +573,7 @@ public class HackingCancer extends Applet
         {
             view = 1;
             for(int i = 0; i < random.nextInt(3) + 3; i++)
-                mobs.add(new Monster(new Rectangle(random.nextInt((int) (pWidth * scaleAnimation)- 300)+300, -100, 30, 25)));
+                mobs.add(new Monster(new Rectangle(random.nextInt((int) (pWidth * scaleAnimation)- 300)+300, -100, 30, 25), difficulty));
             path.add(0, new Point(0, (int) path.get(0).getY()));
             path.add(new Point((int) (pWidth * scaleAnimation), (int) path.get(path.size() - 1).getY()));
             if(player == null)
