@@ -36,7 +36,7 @@ public class HackingCancer extends Applet
     double scaleAnimation = 1, score = 0;
 
     long period = ((long) (1000 / framesPerSecond)) * 1000000L;
-    Rectangle startButton, play, instructions, playAgain, back;
+    Rectangle startButton, play, instructions, playAgain, back, hard, medium, easy;
 
     public Image getImage(String f)
     {
@@ -141,9 +141,12 @@ public class HackingCancer extends Applet
 
         startButton = new Rectangle(pWidth - 101, pHeight - 51, 100, 50);
         play = new Rectangle(120, 410, 130, 40);
-        playAgain = new Rectangle(90, 400, 130, 40);
+        playAgain = new Rectangle(90, 480, 130, 40);
         instructions = new Rectangle(740, 410, 130, 40);
         back = new Rectangle(750, 510, 130, 40);
+        hard = new Rectangle(pWidth / 2 - 150, pHeight - 50, 75, 20);
+        medium = new Rectangle(pWidth / 2 - 50, pHeight - 50, 100, 20);
+        easy = new Rectangle(pWidth / 2 + 80, pHeight - 50, 75, 20);
 
         getData();
 
@@ -250,20 +253,20 @@ public class HackingCancer extends Applet
             g2.drawImage(intro, 0, 0, null);
             g2.setColor(Color.white);
             if(difficulty == 2)
-            g2.fillOval(pWidth / 2 - 150, pHeight - 50, 20, 20);
+                g2.fillOval(pWidth / 2 - 150, pHeight - 50, 20, 20);
             else
-            g2.drawOval(pWidth / 2 - 150, pHeight - 50, 20, 20);
-            g2.drawString("Hard", pWidth/2 - 125, pHeight - 30);
+                g2.drawOval(pWidth / 2 - 150, pHeight - 50, 20, 20);
+            g2.drawString("Hard", pWidth / 2 - 125, pHeight - 30);
             if(difficulty == 1)
-            g2.fillOval(pWidth / 2-50, pHeight - 50, 20, 20);
+                g2.fillOval(pWidth / 2 - 50, pHeight - 50, 20, 20);
             else
-            g2.drawOval(pWidth / 2 - 50, pHeight - 50, 20, 20);
-            g2.drawString("Medium", pWidth/2 - 25, pHeight - 30);
+                g2.drawOval(pWidth / 2 - 50, pHeight - 50, 20, 20);
+            g2.drawString("Medium", pWidth / 2 - 25, pHeight - 30);
             if(difficulty == 0)
-            g2.fillOval(pWidth/2 + 80, pHeight - 50, 20, 20);
+                g2.fillOval(pWidth / 2 + 80, pHeight - 50, 20, 20);
             else
-            g2.drawOval(pWidth / 2 + 80, pHeight - 50, 20, 20);
-            g2.drawString("Easy", pWidth/2 + 105, pHeight - 30);
+                g2.drawOval(pWidth / 2 + 80, pHeight - 50, 20, 20);
+            g2.drawString("Easy", pWidth / 2 + 105, pHeight - 30);
         }
         else if(view == 0)
         {//SETTING PATH
@@ -298,7 +301,7 @@ public class HackingCancer extends Applet
                 scaleAnimation = (double) pHeight / (double) (dataMax - dataMin);
                 view = 2;
             }
-            g2.drawImage(pathImg, 0, 0, (int)(pWidth*scaleAnimation), (int)(pHeight*scaleAnimation), 0, 0, pWidth, pHeight, null);
+            g2.drawImage(pathImg, 0, 0, (int) (pWidth * scaleAnimation), (int) (pHeight * scaleAnimation), 0, 0, pWidth, pHeight, null);
             g2.setColor(Color.cyan);
 
             for(int i = 0; i < 10000; i++)
@@ -347,7 +350,7 @@ public class HackingCancer extends Applet
                     dots.remove();
                     score++;
                 }
-                else if(new Rectangle((int) (player.getX() - 20), (int) (player.getY() - 20), 50, 60).contains(new Point((int) (dot.getX()), (int) (dot.getY()))))
+                else if(new Rectangle((int) (player.getX() - 20), (int) (player.getY() - 20), 80, 80).contains(new Point((int) (dot.getX()), (int) (dot.getY()))))
                 {
                     if(dot.getX() < player.getX()) dot.setLocation(dot.getX() + 1, dot.getY());
                     if(dot.getX() > player.getX()) dot.setLocation(dot.getX() - 1, dot.getY());
@@ -381,14 +384,18 @@ public class HackingCancer extends Applet
             //g2.setColor(Color.red);
             for(int i = 0; i < mobs.size(); i++)
                 g2.drawImage(blob, (int) (mobs.get(i).getX() - player.getX() + pWidth / 2),
-                        (int) (mobs.get(i).getY() - player.getY() + pHeight / 2)+20, null);
+                        (int) (mobs.get(i).getY() - player.getY() + pHeight / 2) + 20, null);
             //g2.fillRect((int) (mobs.get(i).getX() - player.getX() + pWidth / 2), (int) (mobs.get(i).getY() - player.getY() + pHeight / 2), 15, 15);
             //g2.setColor(Color.yellow);
-            if(player.isFacingRight())
-                g2.drawImage(walkRight, (int) (pWidth / 2), (int) (pHeight / 2), null);
+            if(player.getVelocityX() != 0)
+                if(player.isFacingRight())
+                    g2.drawImage(walkRight, (int) (pWidth / 2), (int) (pHeight / 2), null);
+                else
+                    g2.drawImage(walkLeft, (int) (pWidth / 2), (int) (pHeight / 2), null);
+            else if(player.isFacingRight())
+                g2.drawImage(standRight, (int) (pWidth / 2), (int) (pHeight / 2), null);
             else
-                g2.drawImage(walkLeft, (int) (pWidth / 2), (int) (pHeight / 2), null);
-
+                g2.drawImage(standLeft, (int) (pWidth / 2), (int) (pHeight / 2), null);
             //g2.fillRect((int) (pWidth / 2), (int) (pHeight / 2), 10, 20);
             g2.drawString("X: " + player.getX() + " Y: " + player.getY(), 20, 40);
             g2.drawString("X: " + path.get(0).getX() + " Y: " + path.get(0).getY() + "  " + path.size(), 20, 60);
@@ -467,8 +474,9 @@ public class HackingCancer extends Applet
                         view = 4;
                     jump(mobs.get(i));
                 }
+        } catch(Exception e)
+        {
         }
-        catch(Exception e){}
         Point previous = null, next = null;
         Iterator<Point> it = path.iterator();
         while(it.hasNext())
@@ -574,10 +582,11 @@ public class HackingCancer extends Applet
     {
         Point m = new Point(e.getX(), e.getY());
         if(view == 0 && startButton.contains(m) && path.size() > 0)
-        {System.out.print(pWidth * scaleAnimation);
+        {
+            System.out.print(pWidth * scaleAnimation);
             view = 1;
             for(int i = 0; i < random.nextInt(3) + 3; i++)
-                mobs.add(new Monster(new Rectangle(random.nextInt((int) (pWidth * (double) pHeight / (double) (dataMax - dataMin))- 500)+500, -100, 30, 25), difficulty));
+                mobs.add(new Monster(new Rectangle(random.nextInt((int) (pWidth * (double) pHeight / (double) (dataMax - dataMin)) - 500) + 500, -100, 30, 25), difficulty));
             path.add(0, new Point(0, (int) path.get(0).getY()));
             path.add(new Point((int) (pWidth * scaleAnimation), (int) path.get(path.size() - 1).getY()));
             if(player == null)
@@ -605,17 +614,17 @@ public class HackingCancer extends Applet
             getData();
         }
         else if(view == 3 && play.contains(m))
-        {
             view = 0;
-        }
+        else if(view == 3 && hard.contains(m))
+            difficulty = 2;
+        else if(view == 3 && medium.contains(m))
+            difficulty = 1;
+        else if(view == 3 && easy.contains(m))
+            difficulty = 0;
         else if(view == 3 && instructions.contains(m))
-        {
             view = 5;
-        }
         else if(view == 5 && back.contains(m))
-        {
             view = 3;
-        }
     }
 
     public void mouseDragged(MouseEvent e)
@@ -631,6 +640,12 @@ public class HackingCancer extends Applet
     {
         mouse.setLocation(e.getX(), e.getY());
         if(startButton.contains(mouse) && view == 0)
+            setCursor(new Cursor(Cursor.HAND_CURSOR));
+        else if(hard.contains(mouse) && view == 3)
+            setCursor(new Cursor(Cursor.HAND_CURSOR));
+        else if(medium.contains(mouse) && view == 3)
+            setCursor(new Cursor(Cursor.HAND_CURSOR));
+        else if(easy.contains(mouse) && view == 3)
             setCursor(new Cursor(Cursor.HAND_CURSOR));
         else if(play.contains(mouse) && view == 3)
             setCursor(new Cursor(Cursor.HAND_CURSOR));

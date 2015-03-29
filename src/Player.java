@@ -12,5 +12,6 @@ public class Player extends Sprite
         this.setX(rect.getX());
         this.setY(rect.getX());
         this.setRectangle(rect);
+        this.setFacingRight(true);
     }
 }//End of player class

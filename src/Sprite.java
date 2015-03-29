@@ -21,6 +21,7 @@ public class Sprite
         this.name = name;
         this.jumpTimer = jumptimer;
         this.jumpPower = jumpPower;
+        this.facingRight = true;
     }
     public Sprite() {
     }
