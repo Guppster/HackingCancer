@@ -38,6 +38,14 @@ public class Monster extends Sprite
                 return;
             }
         }
+        else if(level == 1)
+        {
+            //If Monster is on the right side of Player
+            if(monsterX - playerX > 400 || playerX - monsterX > 400)
+            {
+                return;
+            }
+        }
         else
         {
             //If Monster is on the right side of Player
@@ -60,7 +68,7 @@ public class Monster extends Sprite
             {
                this.setVelocityX(1.5);
 
-                if(level == 1 || level == 2)
+                if(level == 2)
                 {
                     //Wait till he gets close (20 pixel approx. range)
                     if(monsterX - playerX < 20)
@@ -76,6 +84,10 @@ public class Monster extends Sprite
                             this.setVelocityY(this.getJumpPower());
                         }
                     }
+                }
+                else if(level == 1)
+                {
+                    this.setVelocityX(-1.5);
                 }
                 else
                 {
@@ -104,7 +116,8 @@ public class Monster extends Sprite
             {
                 this.setVelocityX(-1.5);
 
-                if(level == 1 || level == 2) {
+                if(level == 2)
+                {
                     //Wait till he gets close (20 pixel approx. range)
                     if (playerX - monsterX < 20) {
                         //Stop and turn around
@@ -117,6 +130,10 @@ public class Monster extends Sprite
                             this.setVelocityY(this.getJumpPower());
                         }
                     }
+                }
+                else if (level == 1)
+                {
+                    this.setVelocityX(1.5);
                 }
                 else
                 {
