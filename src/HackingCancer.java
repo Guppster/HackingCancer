@@ -37,7 +37,7 @@ public class HackingCancer extends Applet
     int[] highScores = new int[10];
     Player player = null;
     Image outro, intro, instructPage, walkLeft, walkRight, blob, pathImg, standRight, standLeft;
-    boolean right = false, left = false, up = false, down = false, scaled = false;
+    boolean right = false, left = false, up = false, down = false, scaled = false, sorted = false;
     int framesPerSecond = 60, view = 3, difficulty = 1;
     double scaleAnimation = 1, score = 0;
 
@@ -169,7 +169,7 @@ public class HackingCancer extends Applet
         easy = new Rectangle(pWidth / 2 + 80, pHeight - 50, 75, 20);
 
         for(int i = 0; i < 10; i++)
-            highScores[i] = 0;//random.nextInt(1000);
+            highScores[i] = random.nextInt(2000);
         getData();
 
         start();//starts main thread
@@ -288,7 +288,7 @@ public class HackingCancer extends Applet
         {//SETTING PATH
             g2.drawImage(pathImg, 0, 0, null);
             g2.setColor(Color.white);
-            g2.drawString("Click to create a path consuming the greatest amount of orbs", 50, 50);
+            g2.drawString("Click to create a path consuming the greatest amount of orbs.", 50, 50);
             g2.setColor(Color.cyan);
             for(int i = 0; i < 10000; i++)
                 g2.drawRect((int) data.get(i).getX(), (int) data.get(i).getY(), 1, 1);
@@ -425,16 +425,15 @@ public class HackingCancer extends Applet
             g2.setFont(new Font("Courier New", Font.PLAIN, 23));
             g2.drawImage(outro, 0, 0, null);
             g2.drawString("" + (int) score, 850, 225);
-            //loadScore();
-            if(score > highScores[9])
+            if(!sorted)
             {
-                highScores[9] = (int) score;
+                sorted = true;
+                sortScore(highScores, (int) score);
             }
-            insertionSort(highScores);
             //saveScore();
             for(int i = 0; i < 10; i++)
             {
-                g2.drawString("" + (int) highScores[i], pWidth / 2 - 75, 200 + i * 30);
+                g2.drawString("" + (int) highScores[9-i], pWidth / 2 - 75, 200 + i * 30);
             }
             g2.setFont(font);
         }
@@ -450,23 +449,41 @@ public class HackingCancer extends Applet
         //bufferGraphics.drawString (powerups.size() + "", 100, 100);
         g.drawImage(bf, 0, 0, this);
     }
-
-    public static void insertionSort(int[] num)
+    public void sortScore (int[] highScores, int score)
     {
-        int j;                     // the number of items sorted so far
-        int key;                // the item to be inserted
-        int i;
-
-        for(j = 1; j < num.length; j++)    // Start with 1 (not 0)
+        int i = 0, tmp;
+        if ((int)score > highScores [0])
+            highScores [0] = (int)score;
+        for (int j = 0 ; j < 10 ; j++)
         {
-            key = num[j];
-            for(i = j - 1; (i >= 0) && (num[i] < key); i--)   // Smaller values are moving up
+            i = j - 1;
+            tmp = highScores [j];
+            while ((i >= 0) && (tmp < highScores [i]))
             {
-                num[i + 1] = num[i];
+                highScores [i + 1] = highScores [i];
+                i--;
             }
-            num[i + 1] = key;    // Put the key in its proper location
+            highScores [i + 1] = tmp;
         }
     }
+
+
+        public  int[] selectionSort(int[] arr)
+        {
+
+            for(int i = 0; i < arr.length - 1; i++)
+            {
+                int index = i;
+                for(int j = i + 1; j < arr.length; j++)
+                    if(arr[j] < arr[index])
+                        index = j;
+
+                int smallerNumber = arr[index];
+                arr[index] = arr[i];
+                arr[i] = smallerNumber;
+            }
+            return arr;
+        }
 
     public void physics(Sprite s, Line2D current)
     {
@@ -649,6 +666,7 @@ public class HackingCancer extends Applet
         else if(view == 4 && playAgain.contains(m))
         {
             view = 0;
+            sorted = false;
             path = new ArrayList<Point>();
             data = new ArrayList<Point>();
             mobs = new ArrayList<Monster>();
