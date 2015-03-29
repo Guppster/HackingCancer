@@ -27,8 +27,12 @@ public class Monster extends Sprite
         //Use players direction and velocity to determine the next move of the AI monster
 
         //If Monster is on the right side of Player
-        if(monsterX - playerX > 100){}
-        else if(playerX < monsterX)
+        if(monsterX - playerX > 300 || playerX - monsterX > 300)
+        {
+            return;
+        }
+
+        if(playerX < monsterX)
         {
             if(player.isFacingRight() && playerVelocity > 0)
             {
@@ -47,9 +51,7 @@ public class Monster extends Sprite
                         this.setJumpTimer(10);
                         this.setVelocityY(this.getJumpPower());
                     }
-
                 }
-
             }
             else
             {
@@ -57,8 +59,9 @@ public class Monster extends Sprite
                 this.setVelocityX(-1.5);
             }
         }
+
         //If Player is on the right side of Monster
-        else if(playerX > monsterX)
+        if(playerX > monsterX)
         {
             if(!player.isFacingRight())
             {
@@ -82,7 +85,7 @@ public class Monster extends Sprite
             else
             {
                 //Chase (Max Positive Velocity)
-                this.setVelocityX(-1.5);
+                this.setVelocityX(1.5);
             }
         }
         //If the player is jumping within range of monster, monster jumps to hit from underneath before player can jump over

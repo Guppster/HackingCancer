@@ -108,8 +108,16 @@ public class Sprite
     public void setVelocityY(double velocityY) {
         this.velocityY = velocityY;
     }
-    public void update() {
-
+    public void update()
+    {
+        if(velocityX > 0)
+        {
+            facingRight = true;
+        }
+        else
+        {
+            facingRight = false;
+        }
         rectangle.translate((int) velocityX, (int) velocityY * (-1));
         x+=velocityX;
         y-=velocityY;
