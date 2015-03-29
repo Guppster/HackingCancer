@@ -431,12 +431,12 @@ public class HackingCancer extends Applet
             {
                 if(score>highScores[i])
                 {
-                    int tmp = score;
+                    int tmp = (int)score;
                     score = highScores[i];
                     highScores[i] = tmp;
                     for(int j = i; j < 10; j++)
                     {
-                        tmp = score;
+                        tmp = (int)score;
                         score = highScores[j];
                         highScores[j] = tmp;
                     }
